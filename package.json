@@ -1,6 +1,6 @@
 {
   "name": "@plasius/ai",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plasius AI functions providing chatbot, text-to-speech, speech-to-text, and AI-generated images and videos",
   "keywords": [
     "chatbot",
