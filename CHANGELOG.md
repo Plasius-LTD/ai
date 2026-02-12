@@ -9,6 +9,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.0.3] - 2026-02-12
+
+- **Added**
   - Standalone public package scaffold at repository root with independent CI/CD, ADRs, and legal governance assets.
   - Contracts-first documentation set:
     - architecture overview
@@ -40,7 +54,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/main...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.0.3...HEAD
 
 ## [1.0.0] - 2026-02-11
 
@@ -55,3 +69,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 - **Security**
   - (placeholder)
+[1.0.3]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.3
