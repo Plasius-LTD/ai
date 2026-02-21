@@ -12,10 +12,27 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
-  - (placeholder)
+  - Hardened GitHub CD publish flow to publish only after successful install, test, and build, then push tags/releases post-publish.
+  - Standardized npm publish path on workflow-dispatched `.github/workflows/cd.yml` using provenance and production environment secrets.
+  - Replaced `audit:deps` from `depcheck` to `npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true` to avoid deprecated dependency-chain risk.
 
 - **Fixed**
   - (placeholder)
+
+- **Security**
+  - Removed `depcheck` (and its `multimatch`/`minimatch` chain) from devDependencies to resolve reported high-severity audit findings.
+
+## [1.0.4] - 2026-02-21
+
+- **Added**
+  - Added `npm run demo:run` for one-command local package/demo verification.
+
+- **Changed**
+  - Aligned OpenAI requirement to `^5.23.2` to match current `plasius-ltd-site` resolved baseline.
+  - Updated React Router and toolchain dependency minimums to current `plasius-ltd-site` requirements.
+
+- **Fixed**
+  - Updated demo docs to run via the package script instead of manual multi-step commands.
 
 - **Security**
   - (placeholder)
@@ -71,6 +88,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ---
 
 [Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 
 ## [1.0.0] - 2026-02-11
 
