@@ -9,6 +9,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.0.4] - 2026-02-21
+
+- **Added**
   - Add a typed chatbot API client (`chatWithAI`, `getChatbotUsage`) for `/ai/chatbot`.
   - Add `ChatbotApiError` with HTTP status/code/usage metadata for auth and quota handling.
   - Add CSRF bootstrap support (GET-first cookie hydration, then `x-csrf-token` on POST).
@@ -56,7 +70,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.0.4...HEAD
 
 ## [1.0.0] - 2026-02-11
 
@@ -72,3 +86,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 - **Security**
   - (placeholder)
 [1.0.3]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.3
+[1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
