@@ -9,10 +9,12 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - Add a typed chatbot API client (`chatWithAI`, `getChatbotUsage`) for `/ai/chatbot`.
+  - Add `ChatbotApiError` with HTTP status/code/usage metadata for auth and quota handling.
+  - Add CSRF bootstrap support (GET-first cookie hydration, then `x-csrf-token` on POST).
 
 - **Changed**
-  - (placeholder)
+  - Export chatbot client utilities from the package root.
 
 - **Fixed**
   - (placeholder)
