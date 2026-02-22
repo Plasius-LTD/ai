@@ -132,7 +132,7 @@ jobs:
         run: |
           set -euo pipefail
           tmp_file="$(mktemp)"
-          if npm sbom --legacy-peer-deps --sbom-format=cyclonedx --sbom-type=library --omit dev > "$tmp_file"; then
+          if npm sbom --sbom-format=cyclonedx --sbom-type=library --omit dev > "$tmp_file"; then
             if [ -s "$tmp_file" ]; then
               mv "$tmp_file" sbom.cdx.json
               echo "generated=true" >> "$GITHUB_OUTPUT"
