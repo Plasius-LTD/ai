@@ -128,11 +128,28 @@ jobs:
         run: npm run build --if-present
 
       - name: Generate SBOM (CycloneDX)
-        run: npm sbom --sbom-format=cyclonedx --sbom-type=library --omit dev > sbom.cdx.json
+        id: sbom
+        run: |
+          set -euo pipefail
+          tmp_file="$(mktemp)"
+          if npm sbom --legacy-peer-deps --sbom-format=cyclonedx --sbom-type=library --omit dev > "$tmp_file"; then
+            if [ -s "$tmp_file" ]; then
+              mv "$tmp_file" sbom.cdx.json
+              echo "generated=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "SBOM output was empty; skipping SBOM attestation/upload."
+              rm -f "$tmp_file" sbom.cdx.json
+              echo "generated=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "SBOM generation failed; skipping SBOM attestation/upload."
+            rm -f "$tmp_file" sbom.cdx.json
+            echo "generated=false" >> "$GITHUB_OUTPUT"
+          fi
         continue-on-error: true
 
       - name: Attest SBOM
-        if: ${{ hashFiles('sbom.cdx.json') != '' }}
+        if: ${{ steps.sbom.outputs.generated == 'true' && hashFiles('sbom.cdx.json') != '' }}
         uses: actions/attest-build-provenance@v3
         with:
           subject-path: sbom.cdx.json
@@ -175,6 +192,17 @@ jobs:
             gh release create "$TAG" --title "Release $TAG" --generate-notes --latest
           fi
 
-          if [ -f sbom.cdx.json ]; then
-            gh release upload "$TAG" sbom.cdx.json --clobber
+          if [ "${{ steps.sbom.outputs.generated }}" = "true" ] && [ -s sbom.cdx.json ]; then
+            for attempt in 1 2 3; do
+              if gh release upload "$TAG" sbom.cdx.json --clobber; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then
+                echo "SBOM upload failed after retries." >&2
+                exit 1
+              fi
+              sleep $((attempt * 5))
+            done
+          else
+            echo "Skipping SBOM release upload (file missing/empty or generation failed)."
           fi
