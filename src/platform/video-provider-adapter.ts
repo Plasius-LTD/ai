@@ -115,8 +115,13 @@ function defaultRequestBody(request: VideoGenerationRequest): Record<string, unk
 }
 
 function defaultHeaders(context: VideoProviderRequestContext): Record<string, string> {
+  const apiKey = context.apiKey.trim();
+  if (!apiKey) {
+    throw new Error("Provider API key is required.");
+  }
+
   return {
-    "API-KEY": context.apiKey,
+    "API-KEY": apiKey,
     "AI-trace-ID": context.traceId ?? crypto.randomUUID(),
     Accept: "application/json",
   };
@@ -179,11 +184,12 @@ export function createHttpVideoProviderAdapter(
     image: File | URL,
     context: VideoProviderRequestContext
   ): Promise<VideoUploadResult> => {
+    const fetchFn = context.fetchFn ?? fetch;
     const formData = new FormData();
     if (image instanceof File) {
       formData.append("image", image, "upload-image");
     } else {
-      const blob = await fetch(image.toString()).then((result) => result.blob());
+      const blob = await fetchFn(image.toString()).then((result) => result.blob());
       formData.append("image", blob, "upload-image");
     }
 

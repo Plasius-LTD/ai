@@ -2,134 +2,70 @@ import OpenAI from "openai";
 import type {
   AIPlatform,
   BalanceCompletion,
-  ChatCompletion,
   Completion,
-  ImageCompletion,
-  ModelCompletion,
-  SpeechCompletion,
-  TextCompletion,
-  VideoCompletion,
 } from "./index.js";
-import { useState } from "react";
 
 export interface OpenAIPlatformProps {
   openaiAPIKey: string;
-  openaiProjectKey: string;
-  openaiOrgID: string;
+  openaiProjectKey?: string;
+  openaiOrgID?: string;
+}
+
+function createCompletionData(
+  type: string,
+  model: string,
+  requestor: string,
+  durationMs: number
+): Completion {
+  return {
+    partitionKey: requestor,
+    id: crypto.randomUUID(),
+    type,
+    model,
+    createdAt: new Date().toISOString(),
+    durationMs,
+    usage: {},
+  };
 }
 
 export async function OpenAIPlatform(
   userId: string,
   props: OpenAIPlatformProps
 ): Promise<AIPlatform> {
+  const apiKey = props.openaiAPIKey.trim();
+  if (!apiKey) {
+    throw new Error("openaiAPIKey is required.");
+  }
+
   const openai = new OpenAI({
-    apiKey: props.openaiAPIKey,
-    project: props.openaiProjectKey,
-    organization: props.openaiOrgID,
+    apiKey,
+    project: props.openaiProjectKey?.trim() || undefined,
+    organization: props.openaiOrgID?.trim() || undefined,
     dangerouslyAllowBrowser: false,
   });
 
   void openai;
 
-  function baseCompletionData(
-    type: string,
-    model: string,
-    requestor: string,
-    duration: number
-  ): Completion {
-    return {
-      partitionKey: requestor,
-      id: crypto.randomUUID(),
-      type,
-      model,
-      createdAt: new Date().toISOString(),
-      durationMs: duration,
-      usage: {},
-    };
-  }
-
-  const chatWithAI = (
-    userId: string,
-    input: string,
-    context: string,
-    model: string
-  ): Promise<ChatCompletion> => {
-    void [input, context, model];
-    const base = baseCompletionData("chat", "model", userId, 0);
-    return Promise.resolve({ ...base, message: "Something", outputUser: "" });
+  const notImplemented = (operation: string): Promise<never> => {
+    return Promise.reject(
+      new Error(`OpenAIPlatform "${operation}" is not implemented yet.`)
+    );
   };
 
-  const synthesizeSpeech = (
-    userId: string,
-    input: string,
-    voice: string,
-    context: string,
-    model: string
-  ): Promise<SpeechCompletion> => {
-    void [input, voice, context, model];
-    const base = baseCompletionData("chat", "model", userId, 0);
-    return Promise.resolve({ ...base, url: new URL("Something") });
-  };
-
-  const transcribeSpeech = (
-    userId: string,
-    input: Buffer,
-    context: string,
-    model: string
-  ): Promise<TextCompletion> => {
-    void [input, context, model];
-    const base = baseCompletionData("chat", "model", userId, 0);
-    return Promise.resolve({ ...base, message: "Something" });
-  };
-
-  const generateImage = (
-    userId: string,
-    input: string,
-    context: string,
-    model: string
-  ): Promise<ImageCompletion> => {
-    void [input, context, model];
-    const base = baseCompletionData("chat", "model", userId, 0);
-    return Promise.resolve({ ...base, url: new URL("Something") });
-  };
-
-  const produceVideo = (
-    userId: string,
-    imput: string,
-    image: URL,
-    context: string,
-    model: string
-  ): Promise<VideoCompletion> => {
-    void [imput, image, context, model];
-    const base = baseCompletionData("chat", "model", userId, 0);
-    return Promise.resolve({ ...base, url: new URL("Something") });
-  };
-
-  const generateModel = (
-    userId: string,
-    input: string,
-    context: string,
-    model: string
-  ): Promise<ModelCompletion> => {
-    void [input, context, model];
-    const base = baseCompletionData("model", "model", userId, 0);
-    return Promise.resolve({ ...base, modelId: "generated-model-id" });
-  };
-
-  const checkBalance = (userId: string): Promise<BalanceCompletion> => {
-    const base = baseCompletionData("balanceCompletion", "", userId, 0);
+  const checkBalance = async (requestorId: string): Promise<BalanceCompletion> => {
+    const base = createCompletionData("balanceCompletion", "", requestorId, 0);
     return Promise.resolve({ ...base, balance: 0.0 });
   };
 
-  const [currentBalance] = useState<number>((await checkBalance(userId)).balance! as number);
+  const currentBalance = (await checkBalance(userId)).balance;
 
   return {
-    chatWithAI,
-    synthesizeSpeech,
-    transcribeSpeech,
-    generateImage,
-    produceVideo,
-    generateModel,
+    chatWithAI: async () => notImplemented("chatWithAI"),
+    synthesizeSpeech: async () => notImplemented("synthesizeSpeech"),
+    transcribeSpeech: async () => notImplemented("transcribeSpeech"),
+    generateImage: async () => notImplemented("generateImage"),
+    produceVideo: async () => notImplemented("produceVideo"),
+    generateModel: async () => notImplemented("generateModel"),
     checkBalance,
     currentBalance,
   };

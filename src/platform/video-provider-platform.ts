@@ -75,6 +75,11 @@ export async function createVideoProviderPlatform(
   userId: string,
   props: VideoProviderPlatformProps
 ): Promise<AIPlatform> {
+  const apiKey = props.apiKey.trim();
+  if (!apiKey) {
+    throw new Error("apiKey is required for createVideoProviderPlatform.");
+  }
+
   const maxRetries = props.polling?.maxRetries ?? 20;
   const delayMs = props.polling?.delayMs ?? 3000;
 
@@ -125,7 +130,7 @@ export async function createVideoProviderPlatform(
     const startedAt = performance.now();
 
     const uploaded = await props.adapter.uploadImage(image, {
-      apiKey: props.apiKey,
+      apiKey,
       traceId: crypto.randomUUID(),
     });
 
@@ -136,7 +141,7 @@ export async function createVideoProviderPlatform(
         ...props.defaultVideoRequest,
       },
       {
-        apiKey: props.apiKey,
+        apiKey,
         traceId: crypto.randomUUID(),
       }
     );
@@ -144,7 +149,7 @@ export async function createVideoProviderPlatform(
     const videoUrl = await waitForCompletion(
       props.adapter,
       generated.videoId,
-      props.apiKey,
+      apiKey,
       maxRetries,
       delayMs
     );
@@ -171,7 +176,7 @@ export async function createVideoProviderPlatform(
     const startedAt = performance.now();
     const providerBalance = props.adapter.getBalance
       ? await props.adapter.getBalance({
-          apiKey: props.apiKey,
+          apiKey,
           traceId: crypto.randomUUID(),
         })
       : {

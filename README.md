@@ -15,8 +15,9 @@ AI capability contracts and completion schemas for Plasius applications.
 This package currently provides:
 
 - capability contracts (`AICapability`, `AIPlatform`)
-- completion model interfaces (`ChatCompletion`, `ImageCompletion`, etc.)
+- completion model interfaces (`ChatCompletion`, `ImageCompletion`, `ModelCompletion`, etc.)
 - schema definitions for completion entities
+- adapter contracts/factories for multi-provider routing with developer-supplied API keys
 
 Provider wiring and runtime adapters are documented in [`docs/providers.md`](./docs/providers.md).
 
@@ -84,6 +85,10 @@ void platform;
 
 - `AICapability`: enum describing logical capability routing.
 - `AIPlatform`: interface your runtime adapter must implement.
+- Generic multi-capability adapter contracts and helpers:
+  - `AICapabilityAdapter`
+  - `AdapterPlatformProps`
+  - `createAdapterPlatform`
 - Generic video-provider adapter contracts and helpers:
   - `VideoProviderAdapter`
   - `VideoGenerationRequest`
@@ -95,6 +100,7 @@ void platform;
   - `ImageCompletion`
   - `SpeechCompletion`
   - `VideoCompletion`
+  - `ModelCompletion`
   - `BalanceCompletion`
 - Schemas:
   - `completionSchema`
@@ -103,6 +109,7 @@ void platform;
   - `imageCompletionSchema`
   - `speechCompletionSchema`
   - `videoCompletionSchema`
+  - `modelCompletionSchema`
   - `balanceCompletionSchema`
 
 ## Documentation
@@ -114,8 +121,70 @@ void platform;
 ## Known Limitations
 
 - `src/lib/*` currently contains placeholder files and is not part of the public API.
-- Runtime provider adapters are still under stabilization and should be wrapped by host applications.
+- Provider-specific runtime adapters are still under stabilization and should be wrapped by host applications.
 - The package focuses on contracts/schemas first; runtime behavior is expected to be composed by consumers.
+
+### Multi-Capability Adapter Composition
+
+```ts
+import {
+  AICapability,
+  createAdapterPlatform,
+  type AICapabilityAdapter,
+} from "@plasius/ai";
+
+const adapters: AICapabilityAdapter[] = [
+  {
+    id: "openai-chat",
+    capabilities: [AICapability.Chat, AICapability.Speech, AICapability.Image],
+    chatWithAI: async ({ userId, model }) => ({
+      id: crypto.randomUUID(),
+      partitionKey: userId,
+      type: "chat",
+      model,
+      durationMs: 10,
+      createdAt: new Date().toISOString(),
+      message: "Hello from chat adapter",
+      outputUser: "assistant",
+    }),
+    synthesizeSpeech: async () => {
+      throw new Error("Implement speech synthesis");
+    },
+    transcribeSpeech: async () => {
+      throw new Error("Implement speech transcription");
+    },
+    generateImage: async () => {
+      throw new Error("Implement image generation");
+    },
+  },
+  {
+    id: "model-lab",
+    capabilities: [AICapability.Model],
+    generateModel: async ({ userId, input, model }) => ({
+      id: crypto.randomUUID(),
+      partitionKey: userId,
+      type: "model",
+      model,
+      durationMs: 50,
+      createdAt: new Date().toISOString(),
+      modelId: `generated-${input}`,
+    }),
+  },
+];
+
+const platform = await createAdapterPlatform("user-1", {
+  adapters,
+  apiKeys: {
+    "openai-chat": process.env.OPENAI_API_KEY ?? "",
+    "model-lab": process.env.MODEL_LAB_API_KEY ?? "",
+  },
+  defaultAdapterByCapability: {
+    [AICapability.Model]: "model-lab",
+  },
+});
+
+void platform;
+```
 
 ### Generic Video Adapter Composition
 
