@@ -7,7 +7,7 @@
 - **Completion contracts**: typed completion outputs normalize chat/text/image/speech/video/model/balance results.
 - **Schema layer**: schema definitions ensure consistent metadata and persistence shape across runtimes.
 - **Adapter composition**: `createAdapterPlatform` routes capabilities across multiple adapters and injects API keys supplied by the package consumer.
-- **Built-in providers**: OpenAI and Gemini adapters are included for out-of-the-box capability wiring.
+- **Built-in providers**: OpenAI, Gemini, Grok, Meta AI, and Pixelverse adapters are included for out-of-the-box capability wiring.
 - **Resilient transport**: adapters use a shared HTTP resilience policy (timeouts, exponential backoff + jitter, and `Retry-After` handling).
 
 ## Design Intention

@@ -18,6 +18,15 @@ specific provider implementation.
 - `createGeminiAdapter(options?)`
   - Default adapter id: `gemini`
   - Capabilities: chat, image generation, model generation
+- `createGrokAdapter(options?)`
+  - Default adapter id: `grok`
+  - Capabilities: chat, image generation, model generation
+- `createMetaAIAdapter(options?)`
+  - Default adapter id: `meta-ai`
+  - Capabilities: chat, model generation
+- `createPixelverseAdapter(options?)`
+  - Default adapter id: `pixelverse`
+  - Capabilities: video generation, balance
 
 ## Network Citizenship Defaults
 

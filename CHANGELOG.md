@@ -12,6 +12,9 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Added built-in provider adapter factories:
     - `createOpenAIAdapter` for chat, speech synthesis, transcription, image generation, and model generation.
     - `createGeminiAdapter` for chat, image generation, and model generation.
+    - `createGrokAdapter` for xAI Grok chat/image/model generation.
+    - `createMetaAIAdapter` for Meta AI (Llama-compatible) chat/model generation.
+    - `createPixelverseAdapter` for Pixelverse video generation and balance.
   - Added shared HTTP resilience policy contracts (`HttpClientPolicy`) and transport helper for consistent retry/timeout behavior across adapters.
   - Added generic multi-capability adapter contracts (`AICapabilityAdapter`, request context/request types) and `createAdapterPlatform` for routing chat/voice/image/video/model operations.
   - Added `AICapability.Model`, `ModelCompletion`, `modelCompletionSchema`, and `AIPlatform.generateModel(...)`.

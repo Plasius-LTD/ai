@@ -6,8 +6,11 @@ import {
   completionSchema,
   createAdapterPlatform,
   createGeminiAdapter,
+  createGrokAdapter,
   createHttpVideoProviderAdapter,
+  createMetaAIAdapter,
   createOpenAIAdapter,
+  createPixelverseAdapter,
   createVideoProviderPlatform,
   imageCompletionSchema,
   modelCompletionSchema,
@@ -39,6 +42,9 @@ describe("@plasius/ai platform exports", () => {
     expect(createAdapterPlatform).toBeDefined();
     expect(createOpenAIAdapter).toBeDefined();
     expect(createGeminiAdapter).toBeDefined();
+    expect(createGrokAdapter).toBeDefined();
+    expect(createMetaAIAdapter).toBeDefined();
+    expect(createPixelverseAdapter).toBeDefined();
     expect(createHttpVideoProviderAdapter).toBeDefined();
     expect(createVideoProviderPlatform).toBeDefined();
   });

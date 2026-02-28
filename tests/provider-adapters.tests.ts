@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   AICapability,
   createGeminiAdapter,
+  createGrokAdapter,
+  createMetaAIAdapter,
   createOpenAIAdapter,
 } from "../src/platform/index.js";
 
@@ -313,5 +315,83 @@ describe("built-in provider adapters", () => {
     expect(completion?.artifactUrl?.toString()).toBe(
       "https://example.com/video-agent.json"
     );
+  });
+
+  it("creates a Grok adapter with expected capabilities", () => {
+    const adapter = createGrokAdapter();
+    expect(adapter.id).toBe("grok");
+    expect(adapter.capabilities).toEqual(
+      expect.arrayContaining([AICapability.Chat, AICapability.Image, AICapability.Model])
+    );
+  });
+
+  it("Grok adapter uses xAI OpenAI-compatible endpoint", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      jsonResponse({
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: "Hello from Grok",
+            },
+          },
+        ],
+      })
+    );
+
+    const adapter = createGrokAdapter({ fetchFn: fetchMock });
+    const completion = await adapter.chatWithAI?.({
+      userId: "user-3",
+      providerId: "grok",
+      apiKey: "grok-key",
+      traceId: "trace-grok-1",
+      input: "hello",
+      context: "",
+      model: "grok-3-mini",
+    });
+
+    expect(completion?.message).toBe("Hello from Grok");
+
+    const [url] = fetchMock.mock.calls[0] ?? [];
+    expect(url).toBe("https://api.x.ai/v1/chat/completions");
+  });
+
+  it("creates a Meta AI adapter with expected capabilities", () => {
+    const adapter = createMetaAIAdapter();
+    expect(adapter.id).toBe("meta-ai");
+    expect(adapter.capabilities).toEqual(
+      expect.arrayContaining([AICapability.Chat, AICapability.Model])
+    );
+  });
+
+  it("Meta AI adapter uses Llama-compatible endpoint", async () => {
+    const fetchMock = vi.fn<typeof fetch>().mockResolvedValue(
+      jsonResponse({
+        choices: [
+          {
+            message: {
+              role: "assistant",
+              content: "Hello from Meta AI",
+            },
+          },
+        ],
+      })
+    );
+
+    const adapter = createMetaAIAdapter({ fetchFn: fetchMock });
+    const completion = await adapter.chatWithAI?.({
+      userId: "user-4",
+      providerId: "meta-ai",
+      apiKey: "meta-key",
+      traceId: "trace-meta-1",
+      input: "hello",
+      context: "",
+      model: "Llama-3.3-70B-Instruct",
+    });
+
+    expect(completion?.message).toBe("Hello from Meta AI");
+
+    const [url] = fetchMock.mock.calls[0] ?? [];
+    expect(url).toBe("https://api.llama.com/compat/v1/chat/completions");
   });
 });

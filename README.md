@@ -95,6 +95,9 @@ void platform;
   - `createAdapterPlatform`
   - `createOpenAIAdapter`
   - `createGeminiAdapter`
+  - `createGrokAdapter`
+  - `createMetaAIAdapter`
+  - `createPixelverseAdapter`
 - Generic video-provider adapter contracts and helpers:
   - `VideoProviderAdapter`
   - `VideoGenerationRequest`
@@ -137,7 +140,10 @@ import {
   AICapability,
   createAdapterPlatform,
   createGeminiAdapter,
+  createGrokAdapter,
+  createMetaAIAdapter,
   createOpenAIAdapter,
+  createPixelverseAdapter,
 } from "@plasius/ai";
 
 const openAIAdapter = createOpenAIAdapter({
@@ -171,17 +177,26 @@ const geminiAdapter = createGeminiAdapter({
   },
 });
 
+const grokAdapter = createGrokAdapter();
+const metaAdapter = createMetaAIAdapter();
+const pixelverseAdapter = createPixelverseAdapter();
+
 const platform = await createAdapterPlatform("user-1", {
-  adapters: [openAIAdapter, geminiAdapter],
+  adapters: [openAIAdapter, geminiAdapter, grokAdapter, metaAdapter, pixelverseAdapter],
   apiKeys: {
     openai: process.env.OPENAI_API_KEY ?? "",
     gemini: process.env.GEMINI_API_KEY ?? "",
+    grok: process.env.XAI_API_KEY ?? "",
+    "meta-ai": process.env.META_AI_API_KEY ?? "",
+    pixelverse: process.env.PIXELVERSE_API_KEY ?? "",
   },
   defaultAdapterByCapability: {
-    [AICapability.Chat]: "openai",
+    [AICapability.Chat]: "grok",
     [AICapability.Speech]: "openai",
     [AICapability.Image]: "gemini",
     [AICapability.Model]: "gemini",
+    [AICapability.Video]: "pixelverse",
+    [AICapability.Balance]: "pixelverse",
   },
 });
 

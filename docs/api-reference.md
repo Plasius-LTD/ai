@@ -111,6 +111,28 @@ Creates a built-in Gemini adapter implementing:
 
 `options.httpPolicy` applies retry/timeout behavior to all Gemini adapter HTTP requests.
 
+### `createGrokAdapter(options?)`
+
+Creates an xAI Grok adapter (OpenAI-compatible transport) implementing:
+
+- `chatWithAI`
+- `generateImage`
+- `generateModel`
+
+### `createMetaAIAdapter(options?)`
+
+Creates a Meta AI adapter (Llama-compatible transport) implementing:
+
+- `chatWithAI`
+- `generateModel`
+
+### `createPixelverseAdapter(options?)`
+
+Creates a Pixelverse adapter implementing:
+
+- `produceVideo`
+- `checkBalance`
+
 ## Exported Schemas
 
 - `completionSchema`
