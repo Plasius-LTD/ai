@@ -66,6 +66,9 @@ const platform: AIPlatform = {
   produceVideo: async () => {
     throw new Error("Not implemented");
   },
+  generateModel: async () => {
+    throw new Error("Not implemented");
+  },
   checkBalance: async () => ({
     id: crypto.randomUUID(),
     partitionKey: "user-1",
