@@ -6,7 +6,7 @@ specific provider implementation.
 ## Recommended Integration Pattern
 
 1. Build provider adapters in your host app or a dedicated integration package.
-2. Implement `AIPlatform` for each provider.
+2. Compose adapters with `createAdapterPlatform(...)` and an `apiKeys` map keyed by adapter id.
 3. Keep provider secrets in runtime environment variables, not in UI bundles.
 4. Normalize results into exported completion models.
 
@@ -16,6 +16,7 @@ specific provider implementation.
 - Populate `durationMs` from measured execution time.
 - Set `partitionKey` to your stable user/session key.
 - Attach provider usage/cost metadata to `usage`.
+- Use stable adapter ids and provide matching API keys in `AdapterPlatformProps.apiKeys`.
 - Return strongly typed completion variants for each capability.
 
 ## Stability Notes

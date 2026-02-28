@@ -9,11 +9,17 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - Added generic multi-capability adapter contracts (`AICapabilityAdapter`, request context/request types) and `createAdapterPlatform` for routing chat/voice/image/video/model operations.
+  - Added `AICapability.Model`, `ModelCompletion`, `modelCompletionSchema`, and `AIPlatform.generateModel(...)`.
   - Added generic video-provider adapter contracts (`VideoProviderAdapter`, request/result types).
   - Added `createHttpVideoProviderAdapter` for host-defined HTTP endpoint mapping.
   - Added `createVideoProviderPlatform` to compose `AIPlatform` video/balance behavior from adapters.
 
 - **Changed**
+  - Hardened provisional adapters to align with injected-key usage:
+    - `OpenAIPlatform` now validates API key input and removes React hook usage from runtime platform construction.
+    - `createVideoProviderPlatform` now validates non-empty API key input.
+    - `createHttpVideoProviderAdapter` now validates API keys and uses request-scoped `fetchFn` for URL image uploads.
   - Hardened GitHub CD publish flow to publish only after successful install, test, and build, then push tags/releases post-publish.
   - Standardized npm publish path on workflow-dispatched `.github/workflows/cd.yml` using provenance and production environment secrets.
   - Replaced `audit:deps` from `depcheck` to `npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true` to avoid deprecated dependency-chain risk.

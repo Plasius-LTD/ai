@@ -12,6 +12,7 @@ Routing capability enum:
 - `Image`
 - `Video`
 - `Balance`
+- `Model`
 
 ## Core Interfaces
 
@@ -24,6 +25,7 @@ Contract for runtime adapters:
 - `transcribeSpeech(userId, input, context, model)`
 - `generateImage(userId, input, context, model)`
 - `produceVideo(userId, input, image, context, model)`
+- `generateModel(userId, input, context, model)`
 - `checkBalance(userId)`
 - `currentBalance`
 
@@ -51,7 +53,28 @@ Specialized variants:
 - `ImageCompletion`
 - `SpeechCompletion`
 - `VideoCompletion`
+- `ModelCompletion`
 - `BalanceCompletion`
+
+## Adapter Composition
+
+### `AICapabilityAdapter`
+
+Provider adapter contract with capability declarations and optional operation handlers:
+
+- `id`
+- `capabilities`
+- `chatWithAI(request)?`
+- `synthesizeSpeech(request)?`
+- `transcribeSpeech(request)?`
+- `generateImage(request)?`
+- `produceVideo(request)?`
+- `generateModel(request)?`
+- `checkBalance(request)?`
+
+### `createAdapterPlatform(userId, props)`
+
+Builds an `AIPlatform` by routing capability calls to registered adapters and injecting developer-supplied API keys from `props.apiKeys`.
 
 ## Exported Schemas
 
@@ -61,4 +84,5 @@ Specialized variants:
 - `imageCompletionSchema`
 - `speechCompletionSchema`
 - `videoCompletionSchema`
+- `modelCompletionSchema`
 - `balanceCompletionSchema`
