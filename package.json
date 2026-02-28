@@ -1,6 +1,6 @@
 {
   "name": "@plasius/ai",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Plasius AI functions providing chatbot, text-to-speech, speech-to-text, and AI-generated images and videos",
   "keywords": [
     "chatbot",
@@ -38,10 +38,10 @@
   "author": "Plasius LTD <development@plasius.co.uk>",
   "license": "MIT",
   "dependencies": {
-    "@plasius/entity-manager": "^1.0.5",
-    "@plasius/error": "^1.0.3",
-    "@plasius/profile": "^1.0.6",
-    "@plasius/schema": "^1.2.1"
+    "@plasius/entity-manager": "^1.0.6",
+    "@plasius/error": "^1.0.5",
+    "@plasius/profile": "^1.0.7",
+    "@plasius/schema": "^1.2.2"
   },
   "peerDependencies": {
     "react": "^19.1.0"
