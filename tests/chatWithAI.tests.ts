@@ -21,7 +21,6 @@ describe("@plasius/ai chatWithAI", () => {
   });
 
   afterEach(() => {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
     delete (globalThis as Record<string, unknown>).document;
   });
 
