@@ -84,6 +84,11 @@ void platform;
 
 - `AICapability`: enum describing logical capability routing.
 - `AIPlatform`: interface your runtime adapter must implement.
+- Generic video-provider adapter contracts and helpers:
+  - `VideoProviderAdapter`
+  - `VideoGenerationRequest`
+  - `createHttpVideoProviderAdapter`
+  - `createVideoProviderPlatform`
 - `Completion` + typed completion variants:
   - `ChatCompletion`
   - `TextCompletion`
@@ -111,6 +116,29 @@ void platform;
 - `src/lib/*` currently contains placeholder files and is not part of the public API.
 - Runtime provider adapters are still under stabilization and should be wrapped by host applications.
 - The package focuses on contracts/schemas first; runtime behavior is expected to be composed by consumers.
+
+### Generic Video Adapter Composition
+
+```ts
+import {
+  createHttpVideoProviderAdapter,
+  createVideoProviderPlatform,
+} from "@plasius/ai";
+
+const videoAdapter = createHttpVideoProviderAdapter({
+  uploadImagePath: "/provider/image/upload",
+  generateVideoPath: "/provider/video/generate",
+  getVideoResultPath: (videoId) => `/provider/video/result/${videoId}`,
+  getBalancePath: "/provider/account/balance",
+});
+
+const platform = await createVideoProviderPlatform("user-1", {
+  apiKey: process.env.PROVIDER_API_KEY ?? "",
+  adapter: videoAdapter,
+});
+
+void platform;
+```
 
 ## Development
 

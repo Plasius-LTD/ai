@@ -1,2 +1,2 @@
 export * from "./balance.js";
-export * from "./pixelverseeditor.js";
+export * from "./video-generation-editor.js";

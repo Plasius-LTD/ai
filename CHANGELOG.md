@@ -9,15 +9,19 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
-  - (placeholder)
+  - Added generic video-provider adapter contracts (`VideoProviderAdapter`, request/result types).
+  - Added `createHttpVideoProviderAdapter` for host-defined HTTP endpoint mapping.
+  - Added `createVideoProviderPlatform` to compose `AIPlatform` video/balance behavior from adapters.
 
 - **Changed**
   - Hardened GitHub CD publish flow to publish only after successful install, test, and build, then push tags/releases post-publish.
   - Standardized npm publish path on workflow-dispatched `.github/workflows/cd.yml` using provenance and production environment secrets.
   - Replaced `audit:deps` from `depcheck` to `npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true` to avoid deprecated dependency-chain risk.
+  - Refactored video editor/balance components to rely on injected provider adapters instead of hardcoded vendor wiring.
+  - Removed provider-specific identifiers from code roots to enforce public package boundaries.
 
 - **Fixed**
-  - (placeholder)
+  - `pack:check` now passes vendor-namespace checks for `src/**` by using generic provider naming in runtime/editor code.
 
 - **Security**
   - Removed `depcheck` (and its `multimatch`/`minimatch` chain) from devDependencies to resolve reported high-severity audit findings.

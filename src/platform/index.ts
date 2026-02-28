@@ -235,3 +235,16 @@ export interface AIPlatform {
   checkBalance: (userId: string) => Promise<BalanceCompletion>;
   currentBalance: number;
 }
+
+export type {
+  ProviderBalance,
+  VideoGenerationRequest,
+  VideoGenerationResult,
+  VideoJobResult,
+  VideoJobState,
+  VideoProviderAdapter,
+  VideoProviderRequestContext,
+} from "./video-provider-adapter.js";
+export { createHttpVideoProviderAdapter } from "./video-provider-adapter.js";
+export type { VideoProviderPlatformProps } from "./video-provider-platform.js";
+export { createVideoProviderPlatform } from "./video-provider-platform.js";

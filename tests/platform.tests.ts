@@ -4,6 +4,8 @@ import {
   balanceCompletionSchema,
   chatCompletionSchema,
   completionSchema,
+  createHttpVideoProviderAdapter,
+  createVideoProviderPlatform,
   imageCompletionSchema,
   speechCompletionSchema,
   textCompletionSchema,
@@ -25,5 +27,10 @@ describe("@plasius/ai platform exports", () => {
     expect(speechCompletionSchema).toBeDefined();
     expect(videoCompletionSchema).toBeDefined();
     expect(balanceCompletionSchema).toBeDefined();
+  });
+
+  it("exports generic provider adapter helpers", () => {
+    expect(createHttpVideoProviderAdapter).toBeDefined();
+    expect(createVideoProviderPlatform).toBeDefined();
   });
 });
