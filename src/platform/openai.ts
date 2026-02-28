@@ -5,6 +5,7 @@ import type {
   ChatCompletion,
   Completion,
   ImageCompletion,
+  ModelCompletion,
   SpeechCompletion,
   TextCompletion,
   VideoCompletion,
@@ -104,6 +105,17 @@ export async function OpenAIPlatform(
     return Promise.resolve({ ...base, url: new URL("Something") });
   };
 
+  const generateModel = (
+    userId: string,
+    input: string,
+    context: string,
+    model: string
+  ): Promise<ModelCompletion> => {
+    void [input, context, model];
+    const base = baseCompletionData("model", "model", userId, 0);
+    return Promise.resolve({ ...base, modelId: "generated-model-id" });
+  };
+
   const checkBalance = (userId: string): Promise<BalanceCompletion> => {
     const base = baseCompletionData("balanceCompletion", "", userId, 0);
     return Promise.resolve({ ...base, balance: 0.0 });
@@ -117,6 +129,7 @@ export async function OpenAIPlatform(
     transcribeSpeech,
     generateImage,
     produceVideo,
+    generateModel,
     checkBalance,
     currentBalance,
   };

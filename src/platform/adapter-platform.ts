@@ -1,16 +1,16 @@
 import { performance } from "node:perf_hooks";
 
-import type {
+import {
   AICapability,
-  AIPlatform,
-  BalanceCompletion,
-  ChatCompletion,
-  Completion,
-  ImageCompletion,
-  ModelCompletion,
-  SpeechCompletion,
-  TextCompletion,
-  VideoCompletion,
+  type AIPlatform,
+  type BalanceCompletion,
+  type ChatCompletion,
+  type Completion,
+  type ImageCompletion,
+  type ModelCompletion,
+  type SpeechCompletion,
+  type TextCompletion,
+  type VideoCompletion,
 } from "./index.js";
 
 export interface AdapterRequestContext {
@@ -136,22 +136,22 @@ function requiresOperationalMethod(
   adapter: AICapabilityAdapter
 ): boolean {
   switch (capability) {
-    case 0:
+    case AICapability.Chat:
       return typeof adapter.chatWithAI === "function";
-    case 1:
+    case AICapability.Text:
       return true;
-    case 2:
+    case AICapability.Speech:
       return (
         typeof adapter.synthesizeSpeech === "function" ||
         typeof adapter.transcribeSpeech === "function"
       );
-    case 3:
+    case AICapability.Image:
       return typeof adapter.generateImage === "function";
-    case 4:
+    case AICapability.Video:
       return typeof adapter.produceVideo === "function";
-    case 5:
+    case AICapability.Balance:
       return typeof adapter.checkBalance === "function";
-    case 6:
+    case AICapability.Model:
       return typeof adapter.generateModel === "function";
     default:
       return false;

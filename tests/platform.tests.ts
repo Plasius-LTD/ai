@@ -4,9 +4,11 @@ import {
   balanceCompletionSchema,
   chatCompletionSchema,
   completionSchema,
+  createAdapterPlatform,
   createHttpVideoProviderAdapter,
   createVideoProviderPlatform,
   imageCompletionSchema,
+  modelCompletionSchema,
   speechCompletionSchema,
   textCompletionSchema,
   videoCompletionSchema,
@@ -17,6 +19,7 @@ describe("@plasius/ai platform exports", () => {
     expect(AICapability.Chat).toBe(0);
     expect(AICapability.Video).toBe(4);
     expect(AICapability.Balance).toBe(5);
+    expect(AICapability.Model).toBe(6);
   });
 
   it("exports completion schemas", () => {
@@ -27,9 +30,11 @@ describe("@plasius/ai platform exports", () => {
     expect(speechCompletionSchema).toBeDefined();
     expect(videoCompletionSchema).toBeDefined();
     expect(balanceCompletionSchema).toBeDefined();
+    expect(modelCompletionSchema).toBeDefined();
   });
 
   it("exports generic provider adapter helpers", () => {
+    expect(createAdapterPlatform).toBeDefined();
     expect(createHttpVideoProviderAdapter).toBeDefined();
     expect(createVideoProviderPlatform).toBeDefined();
   });

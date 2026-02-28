@@ -6,6 +6,7 @@ import type {
   ChatCompletion,
   Completion,
   ImageCompletion,
+  ModelCompletion,
   SpeechCompletion,
   TextCompletion,
   VideoCompletion,
@@ -157,6 +158,15 @@ export async function createVideoProviderPlatform(
     };
   };
 
+  const generateModel = (
+    _userId: string,
+    _input: string,
+    _context: string,
+    _model: string
+  ): Promise<ModelCompletion> => {
+    return Promise.reject(new Error("Not implemented"));
+  };
+
   const checkBalance = async (requestorId: string): Promise<BalanceCompletion> => {
     const startedAt = performance.now();
     const providerBalance = props.adapter.getBalance
@@ -186,6 +196,7 @@ export async function createVideoProviderPlatform(
     transcribeSpeech,
     generateImage,
     produceVideo,
+    generateModel,
     checkBalance,
     currentBalance,
   };
