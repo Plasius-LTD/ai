@@ -168,6 +168,34 @@ export interface VideoCompletion extends Completion {
   url: URL;
 }
 
+export const modelCompletionSchema = createSchema(
+  {
+    modelId: field
+      .string()
+      .description("Identifier for the generated model")
+      .version("1.0"),
+    artifactUrl: field
+      .string()
+      .description("Optional URL to a generated model artifact")
+      .version("1.0")
+      .optional()
+      .as<URL>(),
+  },
+  "modelCompletion",
+  {
+    version: "1.0",
+    table: "completions",
+    schemaValidator: () => {
+      return true;
+    },
+  }
+);
+
+export interface ModelCompletion extends Completion {
+  modelId: string;
+  artifactUrl?: URL;
+}
+
 export const balanceCompletionSchema = createSchema(
   {
     balance: field.number().description("Current balance").version("1.0"),
@@ -193,6 +221,7 @@ export enum AICapability {
   Image,
   Video,
   Balance,
+  Model,
 }
 
 export interface AIPlatform {
@@ -232,6 +261,12 @@ export interface AIPlatform {
     context: string,
     model: string
   ) => Promise<VideoCompletion>;
+  generateModel: (
+    userId: string,
+    input: string,
+    context: string,
+    model: string
+  ) => Promise<ModelCompletion>;
   checkBalance: (userId: string) => Promise<BalanceCompletion>;
   currentBalance: number;
 }
@@ -246,5 +281,18 @@ export type {
   VideoProviderRequestContext,
 } from "./video-provider-adapter.js";
 export { createHttpVideoProviderAdapter } from "./video-provider-adapter.js";
+export type {
+  AdapterBalanceRequest,
+  AdapterChatRequest,
+  AdapterGenerateImageRequest,
+  AdapterGenerateModelRequest,
+  AdapterPlatformProps,
+  AdapterRequestContext,
+  AdapterSynthesizeSpeechRequest,
+  AdapterTranscribeSpeechRequest,
+  AdapterVideoRequest,
+  AICapabilityAdapter,
+} from "./adapter-platform.js";
+export { createAdapterPlatform } from "./adapter-platform.js";
 export type { VideoProviderPlatformProps } from "./video-provider-platform.js";
 export { createVideoProviderPlatform } from "./video-provider-platform.js";
