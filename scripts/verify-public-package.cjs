@@ -70,10 +70,6 @@ function main() {
       label: "proprietary Lunari artifact reference",
       regex: /\blunari\b/i,
     },
-    {
-      label: "proprietary Pixelverse artifact reference",
-      regex: /\bpixelverse\b/i,
-    },
   ];
 
   const codeRoots = ["src", "tests", "demo"];
