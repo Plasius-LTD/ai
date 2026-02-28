@@ -91,7 +91,10 @@ void platform;
 - Generic multi-capability adapter contracts and helpers:
   - `AICapabilityAdapter`
   - `AdapterPlatformProps`
+  - `HttpClientPolicy`
   - `createAdapterPlatform`
+  - `createOpenAIAdapter`
+  - `createGeminiAdapter`
 - Generic video-provider adapter contracts and helpers:
   - `VideoProviderAdapter`
   - `VideoGenerationRequest`
@@ -133,56 +136,52 @@ void platform;
 import {
   AICapability,
   createAdapterPlatform,
-  type AICapabilityAdapter,
+  createGeminiAdapter,
+  createOpenAIAdapter,
 } from "@plasius/ai";
 
-const adapters: AICapabilityAdapter[] = [
-  {
-    id: "openai-chat",
-    capabilities: [AICapability.Chat, AICapability.Speech, AICapability.Image],
-    chatWithAI: async ({ userId, model }) => ({
-      id: crypto.randomUUID(),
-      partitionKey: userId,
-      type: "chat",
-      model,
-      durationMs: 10,
-      createdAt: new Date().toISOString(),
-      message: "Hello from chat adapter",
-      outputUser: "assistant",
-    }),
-    synthesizeSpeech: async () => {
-      throw new Error("Implement speech synthesis");
-    },
-    transcribeSpeech: async () => {
-      throw new Error("Implement speech transcription");
-    },
-    generateImage: async () => {
-      throw new Error("Implement image generation");
-    },
+const openAIAdapter = createOpenAIAdapter({
+  id: "openai",
+  httpPolicy: {
+    maxAttempts: 3,
+    timeoutMs: 30000,
+    baseDelayMs: 250,
+    maxDelayMs: 4000,
+    jitterRatio: 0.2,
   },
-  {
-    id: "model-lab",
-    capabilities: [AICapability.Model],
-    generateModel: async ({ userId, input, model }) => ({
-      id: crypto.randomUUID(),
-      partitionKey: userId,
-      type: "model",
-      model,
-      durationMs: 50,
-      createdAt: new Date().toISOString(),
-      modelId: `generated-${input}`,
-    }),
+  defaultModels: {
+    chat: "gpt-4.1-mini",
+    speech: "gpt-4o-mini-tts",
+    transcription: "gpt-4o-mini-transcribe",
+    image: "gpt-image-1",
+    model: "gpt-4.1-mini",
   },
-];
+});
+
+const geminiAdapter = createGeminiAdapter({
+  id: "gemini",
+  httpPolicy: {
+    maxAttempts: 3,
+    timeoutMs: 30000,
+  },
+  defaultModels: {
+    chat: "gemini-2.0-flash",
+    image: "imagen-3.0-generate-002",
+    model: "gemini-2.0-flash",
+  },
+});
 
 const platform = await createAdapterPlatform("user-1", {
-  adapters,
+  adapters: [openAIAdapter, geminiAdapter],
   apiKeys: {
-    "openai-chat": process.env.OPENAI_API_KEY ?? "",
-    "model-lab": process.env.MODEL_LAB_API_KEY ?? "",
+    openai: process.env.OPENAI_API_KEY ?? "",
+    gemini: process.env.GEMINI_API_KEY ?? "",
   },
   defaultAdapterByCapability: {
-    [AICapability.Model]: "model-lab",
+    [AICapability.Chat]: "openai",
+    [AICapability.Speech]: "openai",
+    [AICapability.Image]: "gemini",
+    [AICapability.Model]: "gemini",
   },
 });
 

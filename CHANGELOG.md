@@ -9,6 +9,10 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - Added built-in provider adapter factories:
+    - `createOpenAIAdapter` for chat, speech synthesis, transcription, image generation, and model generation.
+    - `createGeminiAdapter` for chat, image generation, and model generation.
+  - Added shared HTTP resilience policy contracts (`HttpClientPolicy`) and transport helper for consistent retry/timeout behavior across adapters.
   - Added generic multi-capability adapter contracts (`AICapabilityAdapter`, request context/request types) and `createAdapterPlatform` for routing chat/voice/image/video/model operations.
   - Added `AICapability.Model`, `ModelCompletion`, `modelCompletionSchema`, and `AIPlatform.generateModel(...)`.
   - Added generic video-provider adapter contracts (`VideoProviderAdapter`, request/result types).
@@ -16,8 +20,14 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Added `createVideoProviderPlatform` to compose `AIPlatform` video/balance behavior from adapters.
 
 - **Changed**
+  - Updated docs and examples to use built-in OpenAI/Gemini adapter factories with developer-supplied API keys.
+  - Hardened OpenAI/Gemini/video HTTP adapters with internet-friendly client behavior:
+    - request timeout defaults
+    - exponential backoff with jitter
+    - `Retry-After` handling
+    - retry on transient status codes (`408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`)
   - Hardened provisional adapters to align with injected-key usage:
-    - `OpenAIPlatform` now validates API key input and removes React hook usage from runtime platform construction.
+    - Removed provisional `OpenAIPlatform` runtime scaffold (`src/platform/openai.ts`) in favor of `createOpenAIAdapter`.
     - `createVideoProviderPlatform` now validates non-empty API key input.
     - `createHttpVideoProviderAdapter` now validates API keys and uses request-scoped `fetchFn` for URL image uploads.
   - Hardened GitHub CD publish flow to publish only after successful install, test, and build, then push tags/releases post-publish.

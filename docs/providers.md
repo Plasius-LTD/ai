@@ -5,10 +5,30 @@ specific provider implementation.
 
 ## Recommended Integration Pattern
 
-1. Build provider adapters in your host app or a dedicated integration package.
+1. Use built-in adapters (`createOpenAIAdapter`, `createGeminiAdapter`) or build provider adapters in your host app.
 2. Compose adapters with `createAdapterPlatform(...)` and an `apiKeys` map keyed by adapter id.
 3. Keep provider secrets in runtime environment variables, not in UI bundles.
 4. Normalize results into exported completion models.
+
+## Built-In Adapters
+
+- `createOpenAIAdapter(options?)`
+  - Default adapter id: `openai`
+  - Capabilities: chat, speech synthesis, transcription, image generation, model generation
+- `createGeminiAdapter(options?)`
+  - Default adapter id: `gemini`
+  - Capabilities: chat, image generation, model generation
+
+## Network Citizenship Defaults
+
+Built-in adapters and the generic HTTP video adapter apply resilient request behavior by default:
+
+- Timeout per request (`30s` default).
+- Exponential backoff with jitter for transient failures.
+- Retry on common transient statuses (`408`, `409`, `425`, `429`, `500`, `502`, `503`, `504`).
+- Honor `Retry-After` when present.
+
+Override these values using `httpPolicy` in adapter options.
 
 ## Adapter Checklist
 
@@ -21,7 +41,4 @@ specific provider implementation.
 
 ## Stability Notes
 
-- `src/platform/openai.ts` and `src/platform/pixelverse.ts` are implementation
-  work areas and should be treated as provisional until explicit public export
-  and API freeze.
-- Prefer composition from host apps until adapter APIs are finalized.
+- Prefer `createOpenAIAdapter` and `createGeminiAdapter` for out-of-the-box provider integration.

@@ -1,3 +1,5 @@
+import { fetchWithPolicy, type HttpClientPolicy } from "./http-resilience.js";
+
 export interface ProviderBalance {
   monthlyCredit: number;
   packageCredit: number;
@@ -58,6 +60,7 @@ export interface HttpVideoProviderAdapterConfig {
   generateVideoPath: string;
   getVideoResultPath: (videoId: number) => string;
   getBalancePath?: string;
+  httpPolicy?: HttpClientPolicy;
   mapUploadImageId?: (data: unknown) => number | undefined;
   mapGeneratedVideoId?: (data: unknown) => number | undefined;
   mapVideoResult?: (data: unknown) => VideoJobResult;
@@ -124,6 +127,7 @@ function defaultHeaders(context: VideoProviderRequestContext): Record<string, st
     "API-KEY": apiKey,
     "AI-trace-ID": context.traceId ?? crypto.randomUUID(),
     Accept: "application/json",
+    "X-Plasius-Client": "@plasius/ai/video-http-adapter",
   };
 }
 
@@ -169,11 +173,17 @@ export function createHttpVideoProviderAdapter(
 ): VideoProviderAdapter {
   const fetchJson = async (
     path: string,
-    init: RequestInit,
+    createRequestInit: () => RequestInit | Promise<RequestInit>,
     context: VideoProviderRequestContext
   ): Promise<unknown> => {
     const fetchFn = context.fetchFn ?? fetch;
-    const response = await fetchFn(path, init);
+    const response = await fetchWithPolicy({
+      url: path,
+      operation: "Video provider HTTP request",
+      fetchFn,
+      policy: config.httpPolicy,
+      createRequestInit,
+    });
     if (!response.ok) {
       throw new Error(`Provider request failed (${response.status} ${response.statusText}).`);
     }
@@ -185,23 +195,26 @@ export function createHttpVideoProviderAdapter(
     context: VideoProviderRequestContext
   ): Promise<VideoUploadResult> => {
     const fetchFn = context.fetchFn ?? fetch;
-    const formData = new FormData();
-    if (image instanceof File) {
-      formData.append("image", image, "upload-image");
-    } else {
-      const blob = await fetchFn(image.toString()).then((result) => result.blob());
-      formData.append("image", blob, "upload-image");
-    }
 
     const data = await fetchJson(
       config.uploadImagePath,
-      {
-        method: "POST",
-        headers: {
-          ...defaultHeaders(context),
-          ...config.additionalHeaders,
-        },
-        body: formData,
+      async () => {
+        const formData = new FormData();
+        if (image instanceof File) {
+          formData.append("image", image, "upload-image");
+        } else {
+          const blob = await fetchFn(image.toString()).then((result) => result.blob());
+          formData.append("image", blob, "upload-image");
+        }
+
+        return {
+          method: "POST",
+          headers: {
+            ...defaultHeaders(context),
+            ...config.additionalHeaders,
+          },
+          body: formData,
+        };
       },
       context
     );
@@ -214,20 +227,22 @@ export function createHttpVideoProviderAdapter(
     request: VideoGenerationRequest,
     context: VideoProviderRequestContext
   ): Promise<VideoGenerationResult> => {
-    const body = JSON.stringify(
-      config.mapGenerateRequestBody?.(request) ?? defaultRequestBody(request)
-    );
-
     const data = await fetchJson(
       config.generateVideoPath,
-      {
-        method: "POST",
-        headers: {
-          ...defaultHeaders(context),
-          "Content-Type": "application/json",
-          ...config.additionalHeaders,
-        },
-        body,
+      () => {
+        const body = JSON.stringify(
+          config.mapGenerateRequestBody?.(request) ?? defaultRequestBody(request)
+        );
+
+        return {
+          method: "POST",
+          headers: {
+            ...defaultHeaders(context),
+            "Content-Type": "application/json",
+            ...config.additionalHeaders,
+          },
+          body,
+        };
       },
       context
     );
@@ -247,13 +262,13 @@ export function createHttpVideoProviderAdapter(
   ): Promise<VideoJobResult> => {
     const data = await fetchJson(
       config.getVideoResultPath(videoId),
-      {
+      () => ({
         method: "GET",
         headers: {
           ...defaultHeaders(context),
           ...config.additionalHeaders,
         },
-      },
+      }),
       context
     );
 
@@ -264,14 +279,14 @@ export function createHttpVideoProviderAdapter(
     ? async (context: VideoProviderRequestContext): Promise<ProviderBalance> => {
         const data = await fetchJson(
           config.getBalancePath as string,
-          {
+          () => ({
             method: "GET",
             headers: {
               ...defaultHeaders(context),
               "Content-Type": "application/json",
               ...config.additionalHeaders,
             },
-          },
+          }),
           context
         );
 

@@ -272,6 +272,9 @@ export interface AIPlatform {
 }
 
 export type {
+  HttpClientPolicy,
+} from "./http-resilience.js";
+export type {
   ProviderBalance,
   VideoGenerationRequest,
   VideoGenerationResult,
@@ -296,3 +299,7 @@ export type {
 export { createAdapterPlatform } from "./adapter-platform.js";
 export type { VideoProviderPlatformProps } from "./video-provider-platform.js";
 export { createVideoProviderPlatform } from "./video-provider-platform.js";
+export type { OpenAIAdapterOptions } from "./openai-adapter.js";
+export { createOpenAIAdapter } from "./openai-adapter.js";
+export type { GeminiAdapterOptions } from "./gemini-adapter.js";
+export { createGeminiAdapter } from "./gemini-adapter.js";

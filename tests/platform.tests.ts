@@ -5,7 +5,9 @@ import {
   chatCompletionSchema,
   completionSchema,
   createAdapterPlatform,
+  createGeminiAdapter,
   createHttpVideoProviderAdapter,
+  createOpenAIAdapter,
   createVideoProviderPlatform,
   imageCompletionSchema,
   modelCompletionSchema,
@@ -35,6 +37,8 @@ describe("@plasius/ai platform exports", () => {
 
   it("exports generic provider adapter helpers", () => {
     expect(createAdapterPlatform).toBeDefined();
+    expect(createOpenAIAdapter).toBeDefined();
+    expect(createGeminiAdapter).toBeDefined();
     expect(createHttpVideoProviderAdapter).toBeDefined();
     expect(createVideoProviderPlatform).toBeDefined();
   });
