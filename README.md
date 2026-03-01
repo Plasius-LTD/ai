@@ -27,6 +27,12 @@ Provider wiring and runtime adapters are documented in [`docs/providers.md`](./d
 npm install @plasius/ai
 ```
 
+## Module formats
+
+This package publishes dual ESM and CJS artifacts.
+When CJS output is emitted under `dist-cjs/*.js` with `type: module`, `dist-cjs/package.json` is generated with `{ "type": "commonjs" }` to ensure Node `require(...)` compatibility.
+
+
 ## Usage
 
 ```ts
