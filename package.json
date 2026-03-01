@@ -40,8 +40,8 @@
   "license": "MIT",
   "dependencies": {
     "@plasius/entity-manager": "^1.0.6",
-    "@plasius/error": "^1.0.5",
-    "@plasius/profile": "^1.0.7",
+    "@plasius/error": "^1.0.6",
+    "@plasius/profile": "^1.0.9",
     "@plasius/schema": "^1.2.2"
   },
   "peerDependencies": {
