@@ -40,6 +40,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Removed provider-specific identifiers from code roots to enforce public package boundaries.
 
 - **Fixed**
+  - Enforced CommonJS runtime compatibility for dual-build output by generating and validating `dist-cjs/package.json` (`type: commonjs`) during build and package verification.
   - `pack:check` now passes vendor-namespace checks for `src/**` by using generic provider naming in runtime/editor code.
 
 - **Security**
