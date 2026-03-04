@@ -48,7 +48,7 @@ jobs:
       - name: Install deps
         run: |
           set -euo pipefail
-          npm ci --no-fund --no-audit --legacy-peer-deps || npm install --no-fund --no-audit --legacy-peer-deps
+          npm ci --no-fund --no-audit --no-progress || npm install --no-fund --no-audit --no-progress
 
       - name: Test
         run: npm run test
