@@ -114,9 +114,10 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.14...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.15...HEAD
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.14]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.14
+[1.1.15]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.15
 
 ## [1.0.0] - 2026-02-11
 
