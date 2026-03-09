@@ -9,6 +9,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - Added completion-schema serialization tests covering public and internal payload variants.
   - Added built-in provider adapter factories:
     - `createOpenAIAdapter` for chat, speech synthesis, transcription, image generation, and model generation.
     - `createGeminiAdapter` for chat, image generation, and model generation.
@@ -23,6 +24,8 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Added `createVideoProviderPlatform` to compose `AIPlatform` video/balance behavior from adapters.
 
 - **Changed**
+  - Raised the minimum `@plasius/schema` dependency to `^1.2.6`.
+  - Marked completion `partitionKey` as an internal field so default serialization exposes client-safe payloads.
   - Updated docs and examples to use built-in OpenAI/Gemini adapter factories with developer-supplied API keys.
   - Hardened OpenAI/Gemini/video HTTP adapters with internet-friendly client behavior:
     - request timeout defaults
@@ -42,11 +45,13 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - CD install step now runs without `--legacy-peer-deps`.
 
 - **Fixed**
+  - Prevented completion persistence partition keys from being treated as client-safe fields by default.
   - Enforced CommonJS runtime compatibility for dual-build output by generating and validating `dist-cjs/package.json` (`type: commonjs`) during build and package verification.
   - `pack:check` now passes vendor-namespace checks for `src/**` by using generic provider naming in runtime/editor code.
   - Added extended OpenAI adapter error-path tests and video-provider platform tests to close coverage gaps before release.
 
 - **Security**
+  - Reduced accidental leakage risk for completion ownership metadata in serialized payloads.
   - Removed `depcheck` (and its `multimatch`/`minimatch` chain) from devDependencies to resolve reported high-severity audit findings.
 
 ## [1.0.4] - 2026-02-21

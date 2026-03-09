@@ -26,7 +26,8 @@ export const completionSchema = createSchema(
     partitionKey: field
       .string()
       .description("User or system identifier that made the request")
-      .version("1.0"),
+      .version("1.0")
+      .internal(),
     usage: field
       .object<Record<string, FieldBuilder<number>>>({} as SchemaShape)
       .description("Optional usage metrics like token count or cost")

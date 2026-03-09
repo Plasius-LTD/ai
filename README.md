@@ -127,6 +127,8 @@ void platform;
   - `modelCompletionSchema`
   - `balanceCompletionSchema`
 
+Completion schemas validate persisted records, including the internal `partitionKey` used to associate requests with a user or system actor. When returning completion payloads to clients, prefer `completionSchema.serialize(...)` so internal fields stay out of the default response shape.
+
 ## Documentation
 
 - Architecture: [`docs/architecture.md`](./docs/architecture.md)
@@ -207,6 +209,26 @@ const platform = await createAdapterPlatform("user-1", {
 });
 
 void platform;
+```
+
+### Client-safe completion payloads
+
+```ts
+import { completionSchema } from "@plasius/ai";
+
+const persistedCompletion = {
+  id: "completion-1",
+  type: "chat",
+  model: "gpt-4.1-mini",
+  durationMs: 42,
+  createdAt: new Date().toISOString(),
+  partitionKey: "user-1",
+};
+
+const publicPayload = completionSchema.serialize(persistedCompletion);
+// partitionKey is omitted by default.
+
+void publicPayload;
 ```
 
 ### Generic Video Adapter Composition

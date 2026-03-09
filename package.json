@@ -42,7 +42,7 @@
     "@plasius/entity-manager": "^1.0.10",
     "@plasius/error": "^1.0.9",
     "@plasius/profile": "^1.0.12",
-    "@plasius/schema": "^1.2.4"
+    "@plasius/schema": "^1.2.6"
   },
   "peerDependencies": {
     "react": "^19.1.0"
