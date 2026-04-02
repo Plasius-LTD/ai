@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "types": ["node"],
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist",
