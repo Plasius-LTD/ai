@@ -9,6 +9,9 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - Added agentic foundation contracts for task kinds, request envelopes, rollout metadata, provider/model catalogs, usage metering, confidence, and cost.
+  - Added canonical `ai.agentic.foundation.enabled` rollout metadata and fail-closed helper utilities for host-controlled feature-flag evaluation.
+  - Added ADR-0006 documenting why orchestration stays in downstream `@plasius/ai-*` packages while shared contracts stay in `@plasius/ai`.
   - Added completion-schema serialization tests covering public and internal payload variants.
   - Added built-in provider adapter factories:
     - `createOpenAIAdapter` for chat, speech synthesis, transcription, image generation, and model generation.

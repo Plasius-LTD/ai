@@ -33,6 +33,22 @@ Optional:
 
 - `canHandle(userId, capabilities)`
 
+### `AIRequestEnvelope<TInput, TContext, TMetadata>`
+
+Canonical request shape for downstream agentic workflows:
+
+- `requestId`
+- `createdAt`
+- `taskKind`
+- `actor`
+- `input`
+- `context?`
+- `metadata?`
+- `rollout`
+- `policy`
+
+Create envelopes with `createAIRequestEnvelope(...)` to get fail-closed rollout defaults and validated task-kind formatting.
+
 ## Completion Models
 
 Base type:
@@ -55,6 +71,40 @@ Specialized variants:
 - `VideoCompletion`
 - `ModelCompletion`
 - `BalanceCompletion`
+
+## Agentic Foundation Contracts
+
+### Feature flags and rollout
+
+- `AI_FEATURE_FLAGS`
+- `AI_AGENTIC_FOUNDATION_ROLLOUT`
+- `resolveAIRolloutDecision(control, snapshot?)`
+- `isAgenticFoundationEnabled(snapshot?)`
+
+Rollout descriptors are public contracts only. Host applications remain the source of truth for remote flag evaluation.
+
+### Task-kind helpers
+
+- `AITaskKind`
+- `AITaskKindParts`
+- `createAITaskKind(parts)`
+- `isAITaskKind(value)`
+
+Task kinds use dot-delimited lowercase segments such as `routing.select` or `game.npc-dialogue.near-cache`.
+
+### Policy, catalog, and metering types
+
+- `AIRequestActor`
+- `AIRequestPolicy`
+- `AIExecutionBudget`
+- `AIProviderDescriptor`
+- `AIModelCatalogEntry`
+- `AIUsageMetrics`
+- `AIPricingRate`
+- `AICostEstimate`
+- `AICostLineItem`
+- `AIConfidenceScore`
+- `AIExecutionMetrics`
 
 ## Adapter Composition
 

@@ -8,13 +8,14 @@
 [![Security Policy](https://img.shields.io/badge/security%20policy-yes-orange.svg)](./SECURITY.md)
 [![Changelog](https://img.shields.io/badge/changelog-md-blue.svg)](./CHANGELOG.md)
 
-AI capability contracts and completion schemas for Plasius applications.
+AI capability contracts, completion schemas, and agentic foundation contracts for Plasius applications.
 
 ## Scope
 
 This package currently provides:
 
 - capability contracts (`AICapability`, `AIPlatform`)
+- agentic foundation contracts for request envelopes, task kinds, rollout metadata, provider/model catalogs, and metering
 - completion model interfaces (`ChatCompletion`, `ImageCompletion`, `ModelCompletion`, etc.)
 - schema definitions for completion entities
 - adapter contracts/factories for multi-provider routing with developer-supplied API keys
@@ -94,6 +95,17 @@ void platform;
 
 - `AICapability`: enum describing logical capability routing.
 - `AIPlatform`: interface your runtime adapter must implement.
+- Agentic foundation contracts and helpers:
+  - `AI_FEATURE_FLAGS`
+  - `AI_AGENTIC_FOUNDATION_ROLLOUT`
+  - `createAITaskKind`
+  - `createAIRequestEnvelope`
+  - `resolveAIRolloutDecision`
+  - `AIProviderDescriptor`
+  - `AIModelCatalogEntry`
+  - `AIUsageMetrics`
+  - `AICostEstimate`
+  - `AIConfidenceScore`
 - Generic multi-capability adapter contracts and helpers:
   - `AICapabilityAdapter`
   - `AdapterPlatformProps`
@@ -139,7 +151,7 @@ Completion schemas validate persisted records, including the internal `partition
 
 - `src/lib/*` currently contains placeholder files and is not part of the public API.
 - Provider-specific runtime adapters are still under stabilization and should be wrapped by host applications.
-- The package focuses on contracts/schemas first; runtime behavior is expected to be composed by consumers.
+- The package focuses on contracts/schemas first; runtime behavior is expected to be composed by consumers or downstream `@plasius/ai-*` packages.
 
 ### Multi-Capability Adapter Composition
 
@@ -229,6 +241,47 @@ const publicPayload = completionSchema.serialize(persistedCompletion);
 // partitionKey is omitted by default.
 
 void publicPayload;
+```
+
+### Agentic foundation contracts
+
+```ts
+import {
+  AI_FEATURE_FLAGS,
+  createAIRequestEnvelope,
+  createAITaskKind,
+  resolveAIRolloutDecision,
+} from "@plasius/ai";
+
+const rollout = resolveAIRolloutDecision(
+  {
+    featureFlag: AI_FEATURE_FLAGS.agenticFoundation,
+    evaluator: "remote-flag-service",
+    defaultEnabled: false,
+    fallbackMode: "fail-closed",
+  },
+  {
+    [AI_FEATURE_FLAGS.agenticFoundation]: true,
+  }
+);
+
+const envelope = createAIRequestEnvelope({
+  requestId: "req-1",
+  taskKind: createAITaskKind({
+    domain: "routing",
+    action: "select",
+  }),
+  actor: {
+    actorId: "user-1",
+    actorType: "user",
+  },
+  input: {
+    prompt: "Choose the cheapest safe model.",
+  },
+});
+
+void rollout;
+void envelope;
 ```
 
 ### Generic Video Adapter Composition
