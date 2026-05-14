@@ -299,6 +299,8 @@ export type {
 } from "./adapter-platform.js";
 export { createAdapterPlatform } from "./adapter-platform.js";
 export type { VideoProviderPlatformProps } from "./video-provider-platform.js";
+export type { VideoProviderPlatform } from "./video-provider-platform.js";
+export { VIDEO_PROVIDER_PLATFORM_HARDENING_FEATURE_FLAG } from "./video-provider-platform.js";
 export { createVideoProviderPlatform } from "./video-provider-platform.js";
 export type { OpenAIAdapterOptions } from "./openai-adapter.js";
 export { createOpenAIAdapter } from "./openai-adapter.js";

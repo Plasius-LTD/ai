@@ -43,6 +43,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Standardized npm publish path on workflow-dispatched `.github/workflows/cd.yml` using provenance and production environment secrets.
   - Replaced `audit:deps` from `depcheck` to `npm ls --all --omit=optional --omit=peer > /dev/null 2>&1 || true` to avoid deprecated dependency-chain risk.
   - Refactored video editor/balance components to rely on injected provider adapters instead of hardcoded vendor wiring.
+  - Narrowed `createVideoProviderPlatform` to return a dedicated `VideoProviderPlatform` contract that only includes supported capabilities.
   - Removed provider-specific identifiers from code roots to enforce public package boundaries.
   - Restored CI line-coverage enforcement to `>= 80%` and Vitest thresholds to `lines/functions/statements >= 80%`, `branches >= 70%`.
   - CD install step now runs without `--legacy-peer-deps`.

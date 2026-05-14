@@ -33,6 +33,14 @@ Optional:
 
 - `canHandle(userId, capabilities)`
 
+### `VideoProviderPlatform`
+
+Video-only platform contract used by `createVideoProviderPlatform`:
+
+- `produceVideo(userId, input, image, context, model)`
+- `checkBalance(userId)`
+- `currentBalance`
+
 ### `AIRequestEnvelope<TInput, TContext, TMetadata>`
 
 Canonical request shape for downstream agentic workflows:
@@ -78,6 +86,7 @@ Specialized variants:
 
 - `AI_FEATURE_FLAGS`
 - `AI_AGENTIC_FOUNDATION_ROLLOUT`
+- `VIDEO_PROVIDER_PLATFORM_HARDENING_FEATURE_FLAG`
 - `resolveAIRolloutDecision(control, snapshot?)`
 - `isAgenticFoundationEnabled(snapshot?)`
 
@@ -182,6 +191,10 @@ Creates a Pixelverse adapter implementing:
 
 - `produceVideo`
 - `checkBalance`
+
+### `createVideoProviderPlatform`
+
+Builds a `VideoProviderPlatform` from a `VideoProviderAdapter`.
 
 ## Exported Schemas
 

@@ -120,7 +120,9 @@ void platform;
   - `VideoProviderAdapter`
   - `VideoGenerationRequest`
   - `createHttpVideoProviderAdapter`
+  - `VideoProviderPlatform`
   - `createVideoProviderPlatform`
+    - Contract key: `platform.repo-hardening-sweep.enabled`
 - `Completion` + typed completion variants:
   - `ChatCompletion`
   - `TextCompletion`
