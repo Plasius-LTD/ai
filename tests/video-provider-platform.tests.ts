@@ -117,28 +117,22 @@ describe("createVideoProviderPlatform", () => {
     expect(balance.type).toBe("balanceCompletion");
   });
 
-  it("rejects unsupported capability methods", async () => {
+  it("exposes only the video platform capability surface", async () => {
     const platform = await createVideoProviderPlatform("user-3", {
       apiKey: "video-key",
       adapter: createAdapter(),
       polling: { maxRetries: 1, delayMs: 0 },
     });
 
-    await expect(platform.chatWithAI("user-3", "hi", "", "model")).rejects.toThrow(
-      "Not implemented"
-    );
-    await expect(
-      platform.synthesizeSpeech("user-3", "hi", "voice", "", "model")
-    ).rejects.toThrow("Not implemented");
-    await expect(
-      platform.transcribeSpeech("user-3", Buffer.from("x"), "", "model")
-    ).rejects.toThrow("Not implemented");
-    await expect(platform.generateImage("user-3", "prompt", "", "model")).rejects.toThrow(
-      "Not implemented"
-    );
-    await expect(platform.generateModel("user-3", "prompt", "", "model")).rejects.toThrow(
-      "Not implemented"
-    );
+    expect(typeof platform.produceVideo).toBe("function");
+    expect(typeof platform.checkBalance).toBe("function");
+    expect(typeof platform.currentBalance).toBe("number");
+    expect("chatWithAI" in platform).toBe(false);
+    expect("synthesizeSpeech" in platform).toBe(false);
+    expect("transcribeSpeech" in platform).toBe(false);
+    expect("generateImage" in platform).toBe(false);
+    expect("generateModel" in platform).toBe(false);
+    expect("canHandle" in platform).toBe(false);
   });
 
   it("fails when provider reports failed state", async () => {

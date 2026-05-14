@@ -1,14 +1,8 @@
 import { performance } from "node:perf_hooks";
 
 import type {
-  AIPlatform,
   BalanceCompletion,
-  ChatCompletion,
   Completion,
-  ImageCompletion,
-  ModelCompletion,
-  SpeechCompletion,
-  TextCompletion,
   VideoCompletion,
 } from "./index.js";
 import type {
@@ -26,6 +20,21 @@ export interface VideoProviderPlatformProps {
   };
   defaultVideoRequest?: Partial<Omit<VideoGenerationRequest, "imageId" | "prompt">>;
 }
+
+export interface VideoProviderPlatform {
+  produceVideo: (
+    requestorId: string,
+    prompt: string,
+    image: URL,
+    context: string,
+    model: string
+  ) => Promise<VideoCompletion>;
+  checkBalance: (userId: string) => Promise<BalanceCompletion>;
+  currentBalance: number;
+}
+
+export const VIDEO_PROVIDER_PLATFORM_HARDENING_FEATURE_FLAG =
+  "platform.repo-hardening-sweep.enabled";
 
 function createCompletionBase(
   type: string,
@@ -74,7 +83,7 @@ async function waitForCompletion(
 export async function createVideoProviderPlatform(
   userId: string,
   props: VideoProviderPlatformProps
-): Promise<AIPlatform> {
+): Promise<VideoProviderPlatform> {
   const apiKey = props.apiKey.trim();
   if (!apiKey) {
     throw new Error("apiKey is required for createVideoProviderPlatform.");
@@ -82,43 +91,6 @@ export async function createVideoProviderPlatform(
 
   const maxRetries = props.polling?.maxRetries ?? 20;
   const delayMs = props.polling?.delayMs ?? 3000;
-
-  const chatWithAI = (
-    _userId: string,
-    _input: string,
-    _context: string,
-    _model: string
-  ): Promise<ChatCompletion> => {
-    return Promise.reject(new Error("Not implemented"));
-  };
-
-  const synthesizeSpeech = (
-    _userId: string,
-    _input: string,
-    _voice: string,
-    _context: string,
-    _model: string
-  ): Promise<SpeechCompletion> => {
-    return Promise.reject(new Error("Not implemented"));
-  };
-
-  const transcribeSpeech = (
-    _userId: string,
-    _input: Buffer,
-    _context: string,
-    _model: string
-  ): Promise<TextCompletion> => {
-    return Promise.reject(new Error("Not implemented"));
-  };
-
-  const generateImage = (
-    _userId: string,
-    _input: string,
-    _context: string,
-    _model: string
-  ): Promise<ImageCompletion> => {
-    return Promise.reject(new Error("Not implemented"));
-  };
 
   const produceVideo = async (
     requestorId: string,
@@ -163,15 +135,6 @@ export async function createVideoProviderPlatform(
     };
   };
 
-  const generateModel = (
-    _userId: string,
-    _input: string,
-    _context: string,
-    _model: string
-  ): Promise<ModelCompletion> => {
-    return Promise.reject(new Error("Not implemented"));
-  };
-
   const checkBalance = async (requestorId: string): Promise<BalanceCompletion> => {
     const startedAt = performance.now();
     const providerBalance = props.adapter.getBalance
@@ -196,12 +159,7 @@ export async function createVideoProviderPlatform(
   const currentBalance = (await checkBalance(userId)).balance;
 
   return {
-    chatWithAI,
-    synthesizeSpeech,
-    transcribeSpeech,
-    generateImage,
     produceVideo,
-    generateModel,
     checkBalance,
     currentBalance,
   };
