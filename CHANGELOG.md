@@ -53,6 +53,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Enforced CommonJS runtime compatibility for dual-build output by generating and validating `dist-cjs/package.json` (`type: commonjs`) during build and package verification.
   - `pack:check` now passes vendor-namespace checks for `src/**` by using generic provider naming in runtime/editor code.
   - Added extended OpenAI adapter error-path tests and video-provider platform tests to close coverage gaps before release.
+  - Removed zero-byte source scaffolds from `src/lib/` and added regression coverage so empty TypeScript placeholders are not shipped in the published package tree.
 
 - **Security**
   - Reduced accidental leakage risk for completion ownership metadata in serialized payloads.
