@@ -151,7 +151,7 @@ Completion schemas validate persisted records, including the internal `partition
 
 ## Known Limitations
 
-- `src/lib/*` currently contains placeholder files and is not part of the public API.
+- The supported package surface is the root module export from `src/index.ts`; internal `src/**` files remain implementation details unless they are explicitly re-exported.
 - Provider-specific runtime adapters are still under stabilization and should be wrapped by host applications.
 - The package focuses on contracts/schemas first; runtime behavior is expected to be composed by consumers or downstream `@plasius/ai-*` packages.
 
