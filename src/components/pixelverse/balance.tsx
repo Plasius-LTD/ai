@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
 import type { ProviderBalance, VideoProviderAdapter } from "../../platform/video-provider-adapter.js";
+import {
+  pixelverseTranslationKeys,
+  translatePixelverseText,
+  type PixelverseTranslate,
+} from "./i18n.js";
 import styles from "./balance.module.css";
 
 export interface BalanceProps {
   apiKey: string;
   adapter: VideoProviderAdapter;
   refreshMs?: number;
+  translate?: PixelverseTranslate;
 }
 
-export default function Balance({ apiKey, adapter, refreshMs = 600000 }: BalanceProps) {
+export default function Balance({
+  apiKey,
+  adapter,
+  refreshMs = 600000,
+  translate,
+}: BalanceProps) {
   const [balance, setBalance] = useState<ProviderBalance | null>(null);
 
   const fetchBalance = async (): Promise<void> => {
@@ -41,11 +52,29 @@ export default function Balance({ apiKey, adapter, refreshMs = 600000 }: Balance
     <div className={styles.balance_container}>
       {balance ? (
         <div>
-          <p>Monthly Credit: {balance.monthlyCredit}</p>
-          <p>Package Credit: {balance.packageCredit}</p>
+          <p>
+            {translatePixelverseText(
+              pixelverseTranslationKeys.balanceMonthlyCredit,
+              { value: balance.monthlyCredit },
+              translate
+            )}
+          </p>
+          <p>
+            {translatePixelverseText(
+              pixelverseTranslationKeys.balancePackageCredit,
+              { value: balance.packageCredit },
+              translate
+            )}
+          </p>
         </div>
       ) : (
-        <p>Loading balance...</p>
+        <p>
+          {translatePixelverseText(
+            pixelverseTranslationKeys.balanceLoading,
+            undefined,
+            translate
+          )}
+        </p>
       )}
     </div>
   );
