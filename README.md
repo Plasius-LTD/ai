@@ -123,6 +123,10 @@ void platform;
   - `VideoProviderPlatform`
   - `createVideoProviderPlatform`
     - Contract key: `platform.repo-hardening-sweep.enabled`
+- Pixelverse component translation helpers:
+  - `pixelverseEnGbTranslations`
+  - `pixelverseTranslationKeys`
+  - `translatePixelverseText`
 - `Completion` + typed completion variants:
   - `ChatCompletion`
   - `TextCompletion`
@@ -307,6 +311,26 @@ const platform = await createVideoProviderPlatform("user-1", {
 });
 
 void platform;
+```
+
+### Pixelverse UI Translations
+
+Pixelverse editor components keep their display text in the package-owned `en-GB`
+dictionary and resolve defaults through `@plasius/translations`. Host
+applications can pass a `translate` function to `VideoGenerationEditor` or
+`Balance` when they need a different locale while preserving the package
+fallbacks.
+
+```tsx
+import type { PixelverseTranslate } from "@plasius/ai";
+
+const translate: PixelverseTranslate = (key, args) => i18n.t(key, args);
+
+<VideoGenerationEditor
+  apiKey={apiKey}
+  adapter={videoAdapter}
+  translate={translate}
+/>;
 ```
 
 ## Development

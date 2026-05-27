@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import Balance from "./balance.js";
+import {
+  pixelverseTranslationKeys,
+  translatePixelverseText,
+  type PixelverseTranslate,
+} from "./i18n.js";
 import type {
   VideoGenerationRequest,
   VideoProviderAdapter,
@@ -10,6 +15,7 @@ export interface VideoGenerationEditorProps {
   adapter: VideoProviderAdapter;
   onVideoGenerated?: (videoUrl: string) => void;
   initialRequest?: Partial<Omit<VideoGenerationRequest, "imageId">>;
+  translate?: PixelverseTranslate;
 }
 
 const defaultRequest: Omit<VideoGenerationRequest, "imageId"> = {
@@ -30,12 +36,13 @@ function toRequest(
   };
 }
 
-async function waitForVideoCompletion(
+export async function waitForVideoCompletion(
   adapter: VideoProviderAdapter,
   videoId: number,
   apiKey: string,
   maxRetries = 20,
-  delayMs = 3000
+  delayMs = 3000,
+  translate?: PixelverseTranslate
 ): Promise<string> {
   for (let attempt = 0; attempt < maxRetries; attempt += 1) {
     await new Promise((resolve) => setTimeout(resolve, delayMs));
@@ -49,11 +56,15 @@ async function waitForVideoCompletion(
     }
 
     if (result.state === "failed") {
-      throw new Error("Video generation failed.");
+      throw new Error(
+        translatePixelverseText(pixelverseTranslationKeys.videoErrorFailed, undefined, translate)
+      );
     }
   }
 
-  throw new Error("Timed out waiting for video generation result.");
+  throw new Error(
+    translatePixelverseText(pixelverseTranslationKeys.videoErrorTimeout, undefined, translate)
+  );
 }
 
 export function VideoGenerationEditor({
@@ -61,6 +72,7 @@ export function VideoGenerationEditor({
   adapter,
   onVideoGenerated,
   initialRequest,
+  translate,
 }: VideoGenerationEditorProps) {
   const [videoUrl, setVideoUrl] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -104,7 +116,14 @@ export function VideoGenerationEditor({
         }
       );
 
-      const generatedUrl = await waitForVideoCompletion(adapter, generated.videoId, apiKey);
+      const generatedUrl = await waitForVideoCompletion(
+        adapter,
+        generated.videoId,
+        apiKey,
+        undefined,
+        undefined,
+        translate
+      );
       setVideoUrl(generatedUrl);
       setVideoReady(true);
       onVideoGenerated?.(generatedUrl);
@@ -115,12 +134,22 @@ export function VideoGenerationEditor({
 
   return (
     <div>
-      <Balance apiKey={apiKey} adapter={adapter} />
+      <Balance apiKey={apiKey} adapter={adapter} translate={translate} />
       {!videoReady && !selectedFile && (
         <div>
-          <p>Drag/Drop or Click HERE to upload</p>
+          <p>
+            {translatePixelverseText(
+              pixelverseTranslationKeys.videoUploadPrompt,
+              undefined,
+              translate
+            )}
+          </p>
           <input
-            title="Upload Image"
+            title={translatePixelverseText(
+              pixelverseTranslationKeys.videoUploadImageTitle,
+              undefined,
+              translate
+            )}
             type="file"
             accept=".jpg,.jpeg,.png,.webp"
             onChange={handleFileChange}
@@ -131,7 +160,11 @@ export function VideoGenerationEditor({
       {!videoReady ? (
         <div>
           <label>
-            Prompt
+            {translatePixelverseText(
+              pixelverseTranslationKeys.videoPromptLabel,
+              undefined,
+              translate
+            )}
             <textarea
               value={request.prompt}
               onChange={(event) =>
@@ -145,16 +178,24 @@ export function VideoGenerationEditor({
         </div>
       ) : null}
 
-      {loading && <div>Loading...</div>}
+      {loading && (
+        <div>
+          {translatePixelverseText(pixelverseTranslationKeys.videoLoading, undefined, translate)}
+        </div>
+      )}
 
       {!videoReady && selectedFile && !loading && (
-        <button onClick={handleUploadProcess}>Start Upload</button>
+        <button onClick={handleUploadProcess}>
+          {translatePixelverseText(pixelverseTranslationKeys.videoStartUpload, undefined, translate)}
+        </button>
       )}
 
       {videoReady && (
         <div>
           <video src={videoUrl} controls />
-          <button onClick={handleRegenerate}>Regenerate</button>
+          <button onClick={handleRegenerate}>
+            {translatePixelverseText(pixelverseTranslationKeys.videoRegenerate, undefined, translate)}
+          </button>
         </div>
       )}
     </div>
