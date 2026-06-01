@@ -19,6 +19,7 @@ on:
         type: string
 
 permissions:
+  actions: read
   contents: write
   id-token: write
   attestations: write
@@ -26,6 +27,7 @@ permissions:
 concurrency:
   group: npm-cd-${{ github.ref }}
   cancel-in-progress: false
+
 
 jobs:
   publish:
