@@ -28,6 +28,8 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Added Pixelverse `en-GB` UI translation defaults and helper exports backed by `@plasius/translations`.
 
 - **Changed**
+  - Refreshed direct runtime and toolchain dependency baselines to the latest stable
+    published `@plasius/*`, ESLint, Vitest, React Router, and TypeScript typing releases.
   - Raised the minimum `@plasius/schema` dependency to `^1.2.6`.
   - Marked completion `partitionKey` as an internal field so default serialization exposes client-safe payloads.
   - Updated docs and examples to use built-in OpenAI/Gemini adapter factories with developer-supplied API keys.
