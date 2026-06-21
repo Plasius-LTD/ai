@@ -23,6 +23,7 @@ permissions:
   contents: write
   id-token: write
   attestations: write
+  pull-requests: write
 
 concurrency:
   group: npm-cd-${{ github.ref }}
@@ -30,7 +31,15 @@ concurrency:
 
 
 jobs:
+  prepare_release:
+    uses: Plasius-LTD/plasius-ltd-site/.github/workflows/release-prepare.yml@main
+    with:
+      bump: ${{ inputs.bump }}
+      preid: ${{ inputs.preid }}
+    secrets: inherit
+
   publish:
+    needs: prepare_release
     runs-on: ubuntu-latest
     environment: production
 
@@ -38,6 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Use Node.js
@@ -55,81 +65,40 @@ jobs:
       - name: Test
         run: npm run test
 
-      - name: Prepare release metadata
+      - name: Use prepared release metadata
         id: release
-        env:
-          BUMP: ${{ inputs.bump }}
-          PREID: ${{ inputs.preid }}
         run: |
           set -euo pipefail
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git reset --hard HEAD
-          git clean -fd
-
-          PACKAGE_NAME=$(node -p "require('./package.json').name")
-          PACKAGE_ACCESS=$(node -p "(require('./package.json').publishConfig||{}).access||''")
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-
-          SHOULD_PUSH="false"
-
-          case "${BUMP:-patch}" in
-            major|minor|patch)
-              if [ -n "${PREID:-}" ]; then
-                case "${BUMP}" in
-                  major) npm version premajor --preid "${PREID}" -m "chore: release v%s [skip ci]" ;;
-                  minor) npm version preminor --preid "${PREID}" -m "chore: release v%s [skip ci]" ;;
-                  patch) npm version prepatch --preid "${PREID}" -m "chore: release v%s [skip ci]" ;;
-                esac
-              else
-                npm version "${BUMP}" -m "chore: release v%s [skip ci]"
-              fi
-              SHOULD_PUSH="true"
-              ;;
-            none)
-              echo "No version bump requested."
-              ;;
-            *)
-              echo "Unknown bump type: ${BUMP}" >&2
-              exit 1
-              ;;
-          esac
-
-          RELEASE_VERSION=$(node -p "require('./package.json').version")
-
-          # If version already exists on npm, keep bumping patch until free.
-          # This prevents publish failures when tags/versions already exist remotely.
-          while npm view "${PACKAGE_NAME}@${RELEASE_VERSION}" version --registry https://registry.npmjs.org >/dev/null 2>&1; do
-            if [ "${BUMP:-patch}" = "none" ]; then
-              echo "Version already exists on npm and bump=none was requested: ${PACKAGE_NAME}@${RELEASE_VERSION}" >&2
-              exit 1
-            fi
-            echo "Version already exists on npm (${PACKAGE_NAME}@${RELEASE_VERSION}); bumping patch..."
-            npm version patch -m "chore: release v%s [skip ci]"
-            SHOULD_PUSH="true"
-            RELEASE_VERSION=$(node -p "require('./package.json').version")
-          done
-
-          RELEASE_TAG="v${RELEASE_VERSION}"
-
-          if ! git rev-parse "${RELEASE_TAG}" >/dev/null 2>&1; then
-            git tag "${RELEASE_TAG}"
-            SHOULD_PUSH="true"
+          FLAGS="${{ needs.prepare_release.outputs.flags }}"
+          PACKAGE_ACCESS=""
+          if [ "${FLAGS}" = "--access public" ]; then
+            PACKAGE_ACCESS="public"
           fi
 
-          echo "package_name=${PACKAGE_NAME}" >> "$GITHUB_OUTPUT"
-          echo "package_access=${PACKAGE_ACCESS}" >> "$GITHUB_OUTPUT"
-          echo "release_version=${RELEASE_VERSION}" >> "$GITHUB_OUTPUT"
-          echo "release_tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
-          echo "should_push=${SHOULD_PUSH}" >> "$GITHUB_OUTPUT"
+          PUBLISHED="${{ needs.prepare_release.outputs.published }}"
+          SHOULD_PUBLISH="true"
+          SKIP_REASON=""
+          if [ "${PUBLISHED}" = "true" ]; then
+            SHOULD_PUBLISH="false"
+            SKIP_REASON="Package version ${{ needs.prepare_release.outputs.version }} is already published; nothing to release."
+          fi
 
-          echo "Prepared release ${PACKAGE_NAME}@${RELEASE_VERSION} (${RELEASE_TAG})"
+          {
+            echo "package_name=${{ needs.prepare_release.outputs.name }}"
+            echo "package_access=${PACKAGE_ACCESS}"
+            echo "release_version=${{ needs.prepare_release.outputs.version }}"
+            echo "release_tag=${{ needs.prepare_release.outputs.tag }}"
+            echo "should_publish=${SHOULD_PUBLISH}"
+            echo "skip_reason=${SKIP_REASON}"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Build
+        if: steps.release.outputs.should_publish == 'true'
         run: npm run build --if-present
 
       - name: Generate SBOM (CycloneDX)
+        if: steps.release.outputs.should_publish == 'true'
         id: sbom
         run: |
           set -euo pipefail
@@ -156,14 +125,34 @@ jobs:
         with:
           subject-path: sbom.cdx.json
 
-      - name: Push release commit and tag
-        if: ${{ steps.release.outputs.should_push == 'true' }}
+      - name: Create release tag from main
+        if: steps.release.outputs.should_publish == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.release.outputs.release_tag }}
         run: |
           set -euo pipefail
-          git push
-          git push --tags
+          git fetch origin main --tags
+          git checkout -B main origin/main
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
+            if gh release view "${TAG}" >/dev/null 2>&1; then
+              IS_DRAFT="$(gh release view "${TAG}" --json isDraft --jq '.isDraft')"
+              if [ "${IS_DRAFT}" != "true" ]; then
+                echo "Published release ${TAG} already exists; reusing the existing tag."
+                exit 0
+              fi
+            fi
+
+            echo "Deleting stale unpublished tag ${TAG} before recreating it from main."
+            git push origin ":refs/tags/${TAG}"
+          fi
+
+          git tag "${TAG}"
+          git push origin "${TAG}"
 
       - name: Create GitHub Release draft (immutable-safe)
+        if: steps.release.outputs.should_publish == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.release.outputs.release_tag }}
@@ -192,6 +181,7 @@ jobs:
           fi
 
       - name: Publish to npm
+        if: steps.release.outputs.should_publish == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           PACKAGE_ACCESS: ${{ steps.release.outputs.package_access }}
@@ -210,6 +200,7 @@ jobs:
           fi
 
       - name: Publish GitHub Release
+        if: steps.release.outputs.should_publish == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.release.outputs.release_tag }}
