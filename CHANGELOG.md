@@ -9,6 +9,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 ## [Unreleased]
 
 - **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.1.28] - 2026-06-22
+
+- **Added**
   - Added agentic foundation contracts for task kinds, request envelopes, rollout metadata, provider/model catalogs, usage metering, confidence, and cost.
   - Added canonical `ai.agentic.foundation.enabled` rollout metadata and fail-closed helper utilities for host-controlled feature-flag evaluation.
   - Added ADR-0006 documenting why orchestration stays in downstream `@plasius/ai-*` packages while shared contracts stay in `@plasius/ai`.
@@ -128,7 +142,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.15...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.28...HEAD
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.14]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.14
 [1.1.15]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.15
@@ -148,3 +162,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 [1.0.3]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.3
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
+[1.1.28]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.28
