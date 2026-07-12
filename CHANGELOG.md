@@ -12,6 +12,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.1.30] - 2026-07-12
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
   - Refreshed the lockfile to consume `@plasius/profile@1.0.39`, `@plasius/schema@1.2.18`, `@plasius/translations@1.0.23`, and the latest stable compatible ESLint and Vitest releases.
 
 - **Fixed**
@@ -156,7 +170,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.29...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.30...HEAD
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.14]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.14
 [1.1.15]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.15
@@ -178,3 +192,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.28]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.28
 [1.1.29]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.29
+[1.1.30]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.30
