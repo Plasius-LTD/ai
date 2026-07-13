@@ -15,7 +15,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Fixed**
-  - (placeholder)
+  - Regenerated the npm 11.16 lockfile without legacy peer resolution so protected release installs remain reproducible, and made release preparation publish the validated main commit for task #35.
 
 - **Security**
   - (placeholder)
