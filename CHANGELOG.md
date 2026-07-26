@@ -12,13 +12,14 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
-  - (placeholder)
+  - Standardized CI and trusted npm publication on Node 24.18.0 LTS.
+  - Removed the unused React Router development dependency after its dependency line became subject to a high-severity advisory.
 
 - **Fixed**
   - Regenerated the npm 11.16 lockfile without legacy peer resolution so protected release installs remain reproducible, and made release preparation publish the validated main commit for task #35.
 
 - **Security**
-  - (placeholder)
+  - Added exact Git-index and npm-package inventory gates that reject the administrative contributor-registry path without reading it, and removed that path from the current source tip.
 
 ## [1.1.31] - 2026-07-13
 
