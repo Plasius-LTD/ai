@@ -353,9 +353,20 @@ npm run demo:run
 
 This package is published via GitHub CD only.
 
-1. Configure repository environment `production` with secret `NPM_TOKEN`.
+1. Bind the npm trusted publisher for `@plasius/ai` to repository
+   `Plasius-LTD/ai`, workflow `cd.yml`, and environment `production`.
 2. Run `.github/workflows/cd.yml` via **Actions -> CD (Publish to npm) -> Run workflow**.
 3. Select the version bump (`patch`, `minor`, `major`, or `none`) and optional pre-release id.
+
+Publication uses Node 24.18.0 LTS and npm OIDC trusted publishing. Do not publish
+from a local machine or configure a long-lived npm token.
+
+## Public Artifact Integrity
+
+CI rejects the administrative contributor-registry path from both the exact Git
+index and the npm dry-run inventory without reading its contents. CI runs on the
+approved self-hosted runner group; package publication runs only through the
+GitHub-hosted `production` CD job.
 
 ## Build Outputs
 
