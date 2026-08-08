@@ -42,7 +42,7 @@ jobs:
     needs: prepare_release
     runs-on: ubuntu-latest
     permissions:
-      actions: read
+      actions: write
       contents: read
     steps:
       - name: Wait for successful exact-SHA CI
@@ -52,13 +52,25 @@ jobs:
         run: |
           set -euo pipefail
 
+          EXISTING_RUN="$(gh run list \
+            --workflow ci.yml \
+            --commit "${COMMIT_SHA}" \
+            --limit 20 \
+            --json databaseId,status,conclusion,event \
+            --jq '[.[] | select(.event == "push" || .event == "workflow_dispatch")][0]' || true)"
+
+          if [ -z "${EXISTING_RUN}" ] || [ "${EXISTING_RUN}" = "null" ]; then
+            echo "No exact-SHA CI run exists for ${COMMIT_SHA}; dispatching CI explicitly."
+            gh workflow run ci.yml --ref "${COMMIT_SHA}"
+          fi
+
           for attempt in $(seq 1 40); do
             RUN_JSON="$(gh run list \
               --workflow ci.yml \
               --commit "${COMMIT_SHA}" \
               --limit 20 \
               --json databaseId,status,conclusion,event \
-              --jq '[.[] | select(.event == "push")][0]' || true)"
+              --jq '[.[] | select(.event == "push" || .event == "workflow_dispatch")][0]' || true)"
 
             if [ -n "${RUN_JSON}" ] && [ "${RUN_JSON}" != "null" ]; then
               RUN_ID="$(jq -r '.databaseId // "unknown"' <<<"${RUN_JSON}")"
@@ -74,7 +86,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "Waiting for a push-triggered CI run for ${COMMIT_SHA} (attempt ${attempt}/40)."
+              echo "Waiting for CI on ${COMMIT_SHA} (attempt ${attempt}/40)."
             fi
 
             sleep 30
