@@ -358,7 +358,9 @@ This package is published via GitHub CD only.
 2. Run `.github/workflows/cd.yml` via **Actions -> CD (Publish to npm) -> Run workflow**.
 3. Select the version bump (`patch`, `minor`, `major`, or `none`) and optional pre-release id.
 
-Publication uses Node 24.18.0 LTS and npm OIDC trusted publishing. Do not publish
+Publication uses Node 24.18.0 LTS and npm OIDC trusted publishing. The publish
+job does not configure `NODE_AUTH_TOKEN` or a registry auth line; npm exchanges
+the GitHub OIDC identity for a short-lived publish credential. Do not publish
 from a local machine or configure a long-lived npm token.
 
 Before publication, CD waits for a successful push-triggered CI run for the exact

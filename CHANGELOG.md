@@ -29,6 +29,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - Standardized CI and trusted npm publication on Node 24.18.0 LTS.
   - Added exact-commit CI verification before package publication and constrained
     release permissions to the jobs that need them.
+  - Removed legacy npm token authentication and registry auth configuration from the CD publish job so trusted publishing uses GitHub OIDC exclusively.
   - Removed the unused React Router development dependency after its dependency line became subject to a high-severity advisory.
 
 - **Fixed**
