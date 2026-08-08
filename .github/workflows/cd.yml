@@ -58,11 +58,11 @@ jobs:
             --commit "${COMMIT_SHA}" \
             --limit 20 \
             --json databaseId,status,conclusion,event \
-            --jq '[.[] | select(.event == "push" || .event == "workflow_dispatch")][0]' || true)"
+            --jq '[.[] | select(.event == "push" or .event == "workflow_dispatch")][0]' || true)"
 
           if [ -z "${EXISTING_RUN}" ] || [ "${EXISTING_RUN}" = "null" ]; then
             echo "No exact-SHA CI run exists for ${COMMIT_SHA}; dispatching CI explicitly."
-            gh workflow run ci.yml --repo "${GITHUB_REPOSITORY}" --ref "${COMMIT_SHA}"
+            gh workflow run ci.yml --repo "${GITHUB_REPOSITORY}" --ref "${GITHUB_REF_NAME}"
           fi
 
           for attempt in $(seq 1 40); do
@@ -72,7 +72,7 @@ jobs:
               --commit "${COMMIT_SHA}" \
               --limit 20 \
               --json databaseId,status,conclusion,event \
-              --jq '[.[] | select(.event == "push" || .event == "workflow_dispatch")][0]' || true)"
+              --jq '[.[] | select(.event == "push" or .event == "workflow_dispatch")][0]' || true)"
 
             if [ -n "${RUN_JSON}" ] && [ "${RUN_JSON}" != "null" ]; then
               RUN_ID="$(jq -r '.databaseId // "unknown"' <<<"${RUN_JSON}")"

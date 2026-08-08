@@ -48,10 +48,10 @@ describe("public release readiness workflow contracts", () => {
     expect(cdWorkflow).toContain("verify_ci:");
     expect(cdWorkflow).toContain("--workflow ci.yml");
     expect(cdWorkflow).toContain(
-      "gh workflow run ci.yml --repo \"${GITHUB_REPOSITORY}\" --ref \"${COMMIT_SHA}\""
+      "gh workflow run ci.yml --repo \"${GITHUB_REPOSITORY}\" --ref \"${GITHUB_REF_NAME}\""
     );
     expect(cdWorkflow).toContain(
-      'select(.event == "push" || .event == "workflow_dispatch")'
+      'select(.event == "push" or .event == "workflow_dispatch")'
     );
     expect(cdWorkflow).toContain("--commit \"${COMMIT_SHA}\"");
     expect(cdWorkflow).toContain(
