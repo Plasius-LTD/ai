@@ -53,6 +53,7 @@ jobs:
           set -euo pipefail
 
           EXISTING_RUN="$(gh run list \
+            --repo "${GITHUB_REPOSITORY}" \
             --workflow ci.yml \
             --commit "${COMMIT_SHA}" \
             --limit 20 \
@@ -61,11 +62,12 @@ jobs:
 
           if [ -z "${EXISTING_RUN}" ] || [ "${EXISTING_RUN}" = "null" ]; then
             echo "No exact-SHA CI run exists for ${COMMIT_SHA}; dispatching CI explicitly."
-            gh workflow run ci.yml --ref "${COMMIT_SHA}"
+            gh workflow run ci.yml --repo "${GITHUB_REPOSITORY}" --ref "${COMMIT_SHA}"
           fi
 
           for attempt in $(seq 1 40); do
             RUN_JSON="$(gh run list \
+              --repo "${GITHUB_REPOSITORY}" \
               --workflow ci.yml \
               --commit "${COMMIT_SHA}" \
               --limit 20 \
