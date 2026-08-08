@@ -24,6 +24,7 @@ const workflowRepository = ["Plasius", "LTD/ai"].join("-");
 describe("public release readiness workflow contracts", () => {
   it("admits same-repository pull requests through the approved reusable workflow", () => {
     expect(ciWorkflow).toContain("pull_request:\n    branches: [main]");
+    expect(ciWorkflow).toContain("workflow_dispatch:");
     expect(ciWorkflow).toContain(
       "self-hosted-validation:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}\n    uses: " +
         workflowRepository +
@@ -46,6 +47,10 @@ describe("public release readiness workflow contracts", () => {
   it("publishes only after exact-SHA CI and through npm OIDC", () => {
     expect(cdWorkflow).toContain("verify_ci:");
     expect(cdWorkflow).toContain("--workflow ci.yml");
+    expect(cdWorkflow).toContain("gh workflow run ci.yml --ref \"${COMMIT_SHA}\"");
+    expect(cdWorkflow).toContain(
+      'select(.event == "push" || .event == "workflow_dispatch")'
+    );
     expect(cdWorkflow).toContain("--commit \"${COMMIT_SHA}\"");
     expect(cdWorkflow).toContain(
       "COMMIT_SHA: ${{ needs.prepare_release.outputs.commit_sha }}"
