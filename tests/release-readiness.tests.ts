@@ -51,6 +51,9 @@ describe("public release readiness workflow contracts", () => {
       "COMMIT_SHA: ${{ needs.prepare_release.outputs.commit_sha }}"
     );
     expect(cdWorkflow).toContain("publish:\n    needs: [prepare_release, verify_ci]");
+    expect(cdWorkflow).toContain(
+      "uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238"
+    );
     expect(cdWorkflow).toContain("id-token: write");
     expect(cdWorkflow).toContain("ACTIONS_ID_TOKEN_REQUEST_URL");
     expect(cdWorkflow).toContain("npm publish ${FLAGS} --provenance");
