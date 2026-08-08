@@ -15,23 +15,26 @@ const cdWorkflow = fs.readFileSync(
   path.join(projectRoot, ".github/workflows/cd.yml"),
   "utf8"
 );
+const selfHostedWorkflow = fs.readFileSync(
+  path.join(projectRoot, ".github/workflows/ci-self-hosted.yml"),
+  "utf8"
+);
 
 describe("public release readiness workflow contracts", () => {
-  it("admits the artifact gate on same-repository pull requests only", () => {
+  it("admits same-repository pull requests through the approved reusable workflow", () => {
     expect(ciWorkflow).toContain("pull_request:\n    branches: [main]");
-    expect(ciWorkflow).toContain(
-      "build-test:\n    if: \${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}"
-    );
-    expect(ciWorkflow).toContain(
-      "public_artifact_integrity:\n    name: Public artifact integrity\n    if: \${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}"
-    );
-    expect(ciWorkflow.match(
+    expect(ciWorkflow).toContain("self-hosted-validation:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}\n    uses: Plasius-LTD/ai/.github/workflows/ci-self-hosted.yml@refs/heads/main");
+    expect(selfHostedWorkflow).toContain("on:\n  workflow_call:");
+    expect(selfHostedWorkflow).toContain("build-test:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
+    expect(selfHostedWorkflow).toContain("public_artifact_integrity:\n    name: Public artifact integrity\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
+    expect(selfHostedWorkflow.match(
       /runs-on:\n      group: Public CI - Quarantined\n      labels: \[self-hosted, Linux, X64\]/gu
     )).toHaveLength(2);
+    expect(ciWorkflow).not.toContain("runs-on:");
     expect(ciWorkflow).not.toContain("pull_request_target");
-    expect(ciWorkflow).not.toMatch(/runs-on:\s*\$\{\{/u);
+    expect(selfHostedWorkflow).not.toContain("pull_request_target");
+    expect(selfHostedWorkflow).not.toMatch(/runs-on:\s*\$\{\{/u);
   });
-
   it("publishes only after exact-SHA CI and through npm OIDC", () => {
     expect(cdWorkflow).toContain("verify_ci:");
     expect(cdWorkflow).toContain("--workflow ci.yml");
