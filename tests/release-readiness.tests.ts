@@ -28,7 +28,7 @@ describe("public release readiness workflow contracts", () => {
     expect(selfHostedWorkflow).toContain("build-test:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
     expect(selfHostedWorkflow).toContain("public_artifact_integrity:\n    name: Public artifact integrity\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
     expect(selfHostedWorkflow.match(
-      /runs-on:\n      group: Public CI - Quarantined\n      labels: \[self-hosted, Linux, X64\]/gu
+      /runs-on:\n {6}group: Public CI - Quarantined\n {6}labels: \[self-hosted, Linux, X64\]/gu
     )).toHaveLength(2);
     expect(ciWorkflow).not.toContain("runs-on:");
     expect(ciWorkflow).not.toContain("pull_request_target");
@@ -38,14 +38,14 @@ describe("public release readiness workflow contracts", () => {
   it("publishes only after exact-SHA CI and through npm OIDC", () => {
     expect(cdWorkflow).toContain("verify_ci:");
     expect(cdWorkflow).toContain("--workflow ci.yml");
-    expect(cdWorkflow).toContain("--commit \"\${COMMIT_SHA}\"");
+    expect(cdWorkflow).toContain("--commit \"${COMMIT_SHA}\"");
     expect(cdWorkflow).toContain(
-      "COMMIT_SHA: \${{ needs.prepare_release.outputs.commit_sha }}"
+      "COMMIT_SHA: ${{ needs.prepare_release.outputs.commit_sha }}"
     );
     expect(cdWorkflow).toContain("publish:\n    needs: [prepare_release, verify_ci]");
     expect(cdWorkflow).toContain("id-token: write");
     expect(cdWorkflow).toContain("ACTIONS_ID_TOKEN_REQUEST_URL");
-    expect(cdWorkflow).toContain("npm publish \${FLAGS} --provenance");
+    expect(cdWorkflow).toContain("npm publish ${FLAGS} --provenance");
     expect(cdWorkflow).not.toContain("NPM_TOKEN");
     expect(cdWorkflow).not.toContain("NODE_AUTH_TOKEN");
   });
