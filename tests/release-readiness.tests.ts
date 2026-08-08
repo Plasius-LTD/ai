@@ -30,6 +30,9 @@ describe("public release readiness workflow contracts", () => {
         "/.github/workflows/ci-self-hosted.yml@main"
     );
     expect(selfHostedWorkflow).toContain("on:\n  workflow_call:");
+    expect(selfHostedWorkflow).toContain(
+      "uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238"
+    );
     expect(selfHostedWorkflow).toContain("build-test:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
     expect(selfHostedWorkflow).toContain("public_artifact_integrity:\n    name: Public artifact integrity\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
     expect(selfHostedWorkflow.match(
