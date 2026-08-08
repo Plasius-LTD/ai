@@ -47,7 +47,9 @@ describe("public release readiness workflow contracts", () => {
   it("publishes only after exact-SHA CI and through npm OIDC", () => {
     expect(cdWorkflow).toContain("verify_ci:");
     expect(cdWorkflow).toContain("--workflow ci.yml");
-    expect(cdWorkflow).toContain("gh workflow run ci.yml --ref \"${COMMIT_SHA}\"");
+    expect(cdWorkflow).toContain(
+      "gh workflow run ci.yml --repo \"${GITHUB_REPOSITORY}\" --ref \"${COMMIT_SHA}\""
+    );
     expect(cdWorkflow).toContain(
       'select(.event == "push" || .event == "workflow_dispatch")'
     );
