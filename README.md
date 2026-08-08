@@ -361,10 +361,16 @@ This package is published via GitHub CD only.
 Publication uses Node 24.18.0 LTS and npm OIDC trusted publishing. Do not publish
 from a local machine or configure a long-lived npm token.
 
+Before publication, CD waits for a successful push-triggered CI run for the exact
+release commit. The publish job refuses to continue unless GitHub Actions exposes
+the OIDC request context required by npm trusted publishing.
+
 ## Public Artifact Integrity
 
 CI rejects the administrative contributor-registry path from both the exact Git
-index and the npm dry-run inventory without reading its contents. CI runs on the
+index and the npm dry-run inventory without reading its contents. The integrity
+gate runs on same-repository pull requests and trusted `main` pushes; fork pull
+requests never execute repository code on self-hosted runners. CI runs on the
 approved self-hosted runner group; package publication runs only through the
 GitHub-hosted `production` CD job.
 

@@ -13,6 +13,8 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 - **Changed**
   - Standardized CI and trusted npm publication on Node 24.18.0 LTS.
+  - Added exact-commit CI verification before package publication and constrained
+    release permissions to the jobs that need them.
   - Removed the unused React Router development dependency after its dependency line became subject to a high-severity advisory.
 
 - **Fixed**
@@ -20,6 +22,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 - **Security**
   - Added exact Git-index and npm-package inventory gates that reject the administrative contributor-registry path without reading it, and removed that path from the current source tip.
+  - Added same-repository pull-request admission for self-hosted CI and removed the long-lived npm token publication path in favor of OIDC trusted publishing.
 
 ## [1.1.31] - 2026-07-13
 
