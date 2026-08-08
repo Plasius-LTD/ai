@@ -12,6 +12,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.1.32] - 2026-08-08
+
+- **Added**
+  - (placeholder)
+
+- **Changed**
   - Standardized CI and trusted npm publication on Node 24.18.0 LTS.
   - Added exact-commit CI verification before package publication and constrained
     release permissions to the jobs that need them.
@@ -188,7 +202,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.31...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.1.32...HEAD
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.14]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.14
 [1.1.15]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.15
@@ -212,3 +226,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 [1.1.29]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.29
 [1.1.30]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.30
 [1.1.31]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.31
+[1.1.32]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.32
