@@ -20,6 +20,11 @@ environment, and invokes `npm publish --provenance` without `NPM_TOKEN`,
 must bind the repository, workflow filename, and environment to the matching
 trusted publisher configuration.
 
+The publish job must additionally prove that the prepared commit is still the
+exact remote `main` head and that a push-triggered `ci.yml` run succeeded for
+that SHA. It fails closed unless the release runtime is Node 24 with npm 11.5.1
+or newer, which is the minimum npm release line supporting this OIDC flow.
+
 ## Alternatives considered
 
 - Keep a long-lived npm write token: rejected because compromise would grant
@@ -40,4 +45,5 @@ provenance, and removes the need to rotate or expose a publish token.
 
 The workflow contract test must reject legacy npm token names and registry auth
 configuration while requiring the OIDC permission, production environment,
-GitHub-hosted runner, and provenance-enabled publish command.
+GitHub-hosted runner, exact-main successful-CI admission, supported runtime,
+and provenance-enabled publish command.
