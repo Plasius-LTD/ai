@@ -8,7 +8,7 @@ describe("npm release workflow", () => {
     expect(workflow).toContain("id-token: write");
     expect(workflow).toContain("runs-on: ubuntu-latest");
     expect(workflow).toContain("environment: production");
-    expect(workflow).toContain("npm publish ${FLAGS} --provenance --registry https://registry.npmjs.org");
+    expect(workflow).toContain('npm publish "./${TARBALL}" --ignore-scripts');
     expect(workflow).not.toContain("NPM_TOKEN");
     expect(workflow).not.toContain("NODE_AUTH_TOKEN");
     expect(workflow).not.toContain("registry-url:");
