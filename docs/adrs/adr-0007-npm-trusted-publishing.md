@@ -13,12 +13,27 @@ trusted-publisher configuration errors as npm `E404` responses.
 
 ## Decision
 
+Publication is phase-isolated: dependency installation, package validation,
+SBOM generation, and immutable tarball packing run in `validate_and_pack`
+without the `production` environment or OIDC permission. The final hosted
+`publish` job downloads only that sealed artifact, explicitly installs npm
+11.6.2, runs no repository dependency code, and publishes the tarball with
+lifecycle scripts disabled. It re-fetches current `main` immediately before
+the first release mutation and again immediately before npm publication.
+`.npmrc` contains no registry-auth placeholder, and release preparation returns
+the reviewed current `main` HEAD rather than package-file history.
+
 Use npm Trusted Publishing through GitHub Actions OIDC. The CD workflow keeps
 `id-token: write`, runs the publish job on `ubuntu-latest` in the `production`
 environment, and invokes `npm publish --provenance` without `NPM_TOKEN`,
 `NODE_AUTH_TOKEN`, or a generated registry auth line. The npm package owner
 must bind the repository, workflow filename, and environment to the matching
 trusted publisher configuration.
+
+The publish job must additionally prove that the prepared commit is still the
+exact remote `main` head and that a push-triggered `ci.yml` run succeeded for
+that SHA. It fails closed unless the release runtime is Node 24 with npm 11.5.1
+or newer, which is the minimum npm release line supporting this OIDC flow.
 
 ## Alternatives considered
 
@@ -40,4 +55,5 @@ provenance, and removes the need to rotate or expose a publish token.
 
 The workflow contract test must reject legacy npm token names and registry auth
 configuration while requiring the OIDC permission, production environment,
-GitHub-hosted runner, and provenance-enabled publish command.
+GitHub-hosted runner, exact-main successful-CI admission, supported runtime,
+and provenance-enabled publish command.

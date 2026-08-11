@@ -12,13 +12,13 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
-  - (placeholder)
+  - Bound publication to the prepared commit only while it remains the exact `main` head and has a successful push-triggered CI run.
 
 - **Fixed**
   - (placeholder)
 
 - **Security**
-  - (placeholder)
+  - Added a fail-closed Node 24 and npm 11.5.1-or-newer runtime check before npm OIDC publication.
 
 ## [1.2.0] - 2026-08-11
 

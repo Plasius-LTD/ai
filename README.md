@@ -363,9 +363,11 @@ job does not configure `NODE_AUTH_TOKEN` or a registry auth line; npm exchanges
 the GitHub OIDC identity for a short-lived publish credential. Do not publish
 from a local machine or configure a long-lived npm token.
 
-Before publication, CD waits for a successful push-triggered CI run for the exact
-release commit. The publish job refuses to continue unless GitHub Actions exposes
-the OIDC request context required by npm trusted publishing.
+Before publication, CD proves that the prepared commit is still the exact
+`origin/main` head and waits for a successful push-triggered `ci.yml` run for
+that SHA. The publish job also enforces Node 24 with npm 11.5.1 or newer and
+refuses to continue unless GitHub Actions exposes the OIDC request context
+required by npm trusted publishing.
 
 ## Public Artifact Integrity
 
