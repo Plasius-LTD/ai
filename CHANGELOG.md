@@ -20,7 +20,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 - **Security**
   - Added a fail-closed Node 24 and npm 11.5.1-or-newer runtime check before npm OIDC publication.
 
-## [1.1.32] - 2026-08-08
+## [1.2.0] - 2026-08-11
 
 - **Added**
   - (placeholder)
