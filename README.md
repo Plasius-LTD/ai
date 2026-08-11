@@ -353,13 +353,17 @@ npm run demo:run
 
 This package is published via GitHub CD only.
 
+Before CD is re-enabled:
+
 1. Bind the npm trusted publisher for `@plasius/ai` to repository
    `Plasius-LTD/ai`, workflow `cd.yml`, and environment `production`.
-2. Run `.github/workflows/cd.yml` via **Actions -> CD (Publish to npm) -> Run workflow**.
-3. Select the version bump (`patch`, `minor`, `major`, or `none`) and optional pre-release id.
+2. Remove the legacy token fallback from the workflow after the binding is
+   verified.
 
-Publication uses Node 24.18.0 LTS and npm OIDC trusted publishing. Do not publish
-from a local machine or configure a long-lived npm token.
+Once enabled, run `.github/workflows/cd.yml` via **Actions -> CD (Publish to
+npm) -> Run workflow** and select the version bump (`patch`, `minor`, `major`,
+or `none`). The target path uses Node 24.18.0 LTS and npm OIDC trusted
+publishing; never publish from a local machine.
 
 ## Public Artifact Integrity
 
