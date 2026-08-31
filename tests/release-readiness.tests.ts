@@ -36,9 +36,7 @@ describe("public release readiness workflow contracts", () => {
     );
     expect(selfHostedWorkflow).toContain("build-test:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
     expect(selfHostedWorkflow).toContain("public_artifact_integrity:\n    name: Public artifact integrity\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}");
-    expect(selfHostedWorkflow.match(
-      /runs-on:\n {6}group: Public CI - Quarantined\n {6}labels: \[self-hosted, Linux, X64\]/gu
-    )).toHaveLength(2);
+    expect(selfHostedWorkflow.match(/runs-on: ubuntu-latest/gu)).toHaveLength(2);
     expect(ciWorkflow).not.toContain("runs-on:");
     expect(ciWorkflow).not.toContain("pull_request_target");
     expect(selfHostedWorkflow).not.toContain("pull_request_target");
