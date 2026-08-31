@@ -39,10 +39,10 @@
   "author": "Plasius LTD <development@plasius.co.uk>",
   "license": "MIT",
   "dependencies": {
-    "@plasius/entity-manager": "^1.0.23",
+    "@plasius/entity-manager": "^1.2.2",
     "@plasius/error": "^1.0.22",
-    "@plasius/profile": "^1.0.40",
-    "@plasius/schema": "^1.2.18",
+    "@plasius/profile": "^1.0.41",
+    "@plasius/schema": "^1.4.3",
     "@plasius/translations": "^1.0.23"
   },
   "peerDependencies": {
@@ -50,21 +50,21 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@testing-library/react": "^16.3.2",
-    "@types/node": "^25.9.3",
-    "@types/react": "^19.2.17",
-    "@typescript-eslint/eslint-plugin": "^8.61.1",
-    "@typescript-eslint/parser": "^8.61.1",
-    "@vitest/coverage-v8": "^4.1.9",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^25.9.5",
+    "@types/react": "^19.2.18",
+    "@typescript-eslint/eslint-plugin": "^8.69.0",
+    "@typescript-eslint/parser": "^8.69.0",
+    "@vitest/coverage-v8": "^4.1.11",
     "ajv": "^8.20.0",
-    "eslint": "^10.5.0",
-    "globals": "^17.6.0",
+    "eslint": "^10.9.1",
+    "globals": "^17.11.0",
     "npm-run-all": "^4.1.5",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
-    "tsx": "^4.21.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tsx": "^4.23.13",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   },
   "sideEffects": [
     "*.css"
@@ -115,7 +115,7 @@
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "npm@11.14.1",
+  "packageManager": "npm@11.19.1",
   "overrides": {
     "minimatch": "^10.2.1"
   }
