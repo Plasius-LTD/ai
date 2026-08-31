@@ -14,4 +14,4 @@ permissions:
 jobs:
   self-hosted-validation:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
-    uses: Plasius-LTD/ai/.github/workflows/ci-self-hosted.yml@main
+    uses: ./.github/workflows/ci-self-hosted.yml
