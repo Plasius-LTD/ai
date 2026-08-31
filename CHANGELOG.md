@@ -12,6 +12,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
   - (placeholder)
 
 - **Changed**
+  - Raised the runtime baselines to `@plasius/entity-manager@^1.2.2`, `@plasius/profile@^1.0.41`, and `@plasius/schema@^1.4.3`.
   - Bound publication to the prepared commit only while it remains the exact `main` head and has a successful push-triggered CI run.
 
 - **Fixed**
