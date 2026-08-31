@@ -19,16 +19,12 @@ const selfHostedWorkflow = fs.readFileSync(
   path.join(projectRoot, ".github/workflows/ci-self-hosted.yml"),
   "utf8"
 );
-const workflowRepository = ["Plasius", "LTD/ai"].join("-");
-
 describe("public release readiness workflow contracts", () => {
   it("admits same-repository pull requests through the approved reusable workflow", () => {
     expect(ciWorkflow).toContain("pull_request:\n    branches: [main]");
     expect(ciWorkflow).toContain("workflow_dispatch:");
     expect(ciWorkflow).toContain(
-      "self-hosted-validation:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}\n    uses: " +
-        workflowRepository +
-        "/.github/workflows/ci-self-hosted.yml@main"
+      "self-hosted-validation:\n    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}\n    uses: ./.github/workflows/ci-self-hosted.yml"
     );
     expect(selfHostedWorkflow).toContain("on:\n  workflow_call:");
     expect(selfHostedWorkflow).toContain(
