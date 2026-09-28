@@ -8,6 +8,20 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ## [Unreleased]
 
+- **Added**
+  - (placeholder)
+
+- **Changed**
+  - (placeholder)
+
+- **Fixed**
+  - (placeholder)
+
+- **Security**
+  - (placeholder)
+
+## [1.2.2] - 2026-09-28
+
 - Refresh npm dependencies and published Plasius package baselines after upstream releases (2026-09-28).
 
 - **Added**
@@ -221,7 +235,7 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 
 ---
 
-[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/Plasius-LTD/ai/compare/v1.2.2...HEAD
 [1.0.4]: https://github.com/Plasius-LTD/ai/releases/tag/v1.0.4
 [1.1.14]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.14
 [1.1.15]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.15
@@ -247,3 +261,4 @@ The format is based on **[Keep a Changelog](https://keepachangelog.com/en/1.1.0/
 [1.1.31]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.31
 [1.1.32]: https://github.com/Plasius-LTD/ai/releases/tag/v1.1.32
 [1.2.1]: https://github.com/Plasius-LTD/ai/releases/tag/v1.2.1
+[1.2.2]: https://github.com/Plasius-LTD/ai/releases/tag/v1.2.2
